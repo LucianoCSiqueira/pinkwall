@@ -1,0 +1,8 @@
+[objects]
+main.obj
+data.obj
+hdr.obj
+/save/tca/pvsneslib/pvsneslib/lib/LoROM_SlowROM/crt0_snes.obj
+/save/tca/pvsneslib/pvsneslib/lib/LoROM_SlowROM/libc.obj
+/save/tca/pvsneslib/pvsneslib/lib/LoROM_SlowROM/libm.obj
+/save/tca/pvsneslib/pvsneslib/lib/LoROM_SlowROM/libtcc.obj

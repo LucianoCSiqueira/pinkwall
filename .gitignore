@@ -24,3 +24,4 @@ gradle-app.setting
 
 bin/
 *.class
+test/

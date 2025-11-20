@@ -1,11 +1,9 @@
 import java.util.HashMap;
 
 import javasnes.App;
-import javasnes.boot.Boot;
 import javasnes.data.Data;
 import javasnes.hdr.MemoryMapping;
 import javasnes.instruction.SnesInstruction;
-import javasnes.makefile.Make;
 import javasnes.output.SnesOutput;
 import javasnes.util.structures.SnesLoadExtern;
 import javasnes.util.types.AppData;
@@ -14,30 +12,30 @@ import javasnes.util.types.SnesProcess;
 import javasnes.util.types.vars.scalar.data.SnesChar;
 import javasnes.util.types.vars.scalar.data.SnesVoid;
 
-public class Main {
+public class PinkWall {
 
     final static SnesVoid VOID = new SnesVoid();
     final static SnesChar CHAR = new SnesChar("char");
 
     public static void main(String[] args) throws Exception {
 
-        App.Builder main = Config.generateApp();
+        App.Builder main = new App.Builder();
 
         HashMap<String, String> memMapConfig = new HashMap<>();
         memMapConfig.put("name", "Javasnes template    ");
-        MemoryMapping memMap = Config.generateMemoryMapping(memMapConfig);
+        MemoryMapping memMap = new MemoryMapping(memMapConfig);
         
         main.setMemoryMapping(memMap);
 
-        AppData appData = Config.generateAppData();
+        AppData appData = new AppData();
         appData.registerData(new Data("tilfont", "pvsneslibfont.pic", false), (byte) 2);
         appData.registerData(new Data("palfont", "pvsneslibfont.pal", false), (byte) 2);
 
         main.setAppData(appData);
 
-        Boot boot = Config.generateBoot();
+        //Boot boot = sequenciaDeBoot();
 
-        main.setBoot(boot);
+        //main.setBoot(boot);
 
         SnesInstruction[] globalDefs = new SnesInstruction[1];
         String[] loadExtern = {"tilfont", "palfont"};
@@ -53,15 +51,11 @@ public class Main {
         main.setProcessor(processor);
         main.setSnesProcesses(processes);
 
-        Make makefile = Config.generateMakefile();
-        makefile.setRomName("javasnes_main");
-        Config.addMakeRules(makefile);
-
-        main.setMakefile(makefile);
-
-        Config.build(main);
+        Compilador.compilarROM(main);
 
     }
+
+    
 
     public static SnesProcess printHelloWorld() {
 

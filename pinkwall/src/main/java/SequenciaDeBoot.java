@@ -8,35 +8,115 @@ public class SequenciaDeBoot {
 
         Boot boot = new Boot();
 
-        Boot.SnesBootCommand[] passosInicializacao = new Boot.SnesBootCommand[8];
+        Boot.SnesBootCommand[] passosInicializacao = new Boot.SnesBootCommand[32];
+
+        passosInicializacao[0] = new Boot.SnesBootCommand(SnesOutput.dmaClearVram());
+
+        carregarTexto(passosInicializacao);
         carregarMapa(passosInicializacao);
+        carregarPink(passosInicializacao);
+        carregarTijolos(passosInicializacao);
+
+        boot.postLogoCommands = passosInicializacao;
+
+        // Atualiza o codigo fonte da sequencia de boot
+        boot.getSourceCode();
 
         return boot;
+    }
+
+    public static void carregarTexto(Boot.SnesBootCommand[] comandosBoot) {
+
+        SnesInstruction[] comandos = new SnesInstruction[4];
+
+        comandos[0] = SnesOutput.consoleSetTextGfxPtr("0x3000");
+        comandos[1] = SnesOutput.consoleSetTextMapPtr("0x6800");
+        comandos[2] = SnesOutput.consoleSetTextOffset("0x0100");
+        comandos[3] = SnesOutput.consoleInitText(0, 16 * 2, "&tilesfont", "&palfont");
+
+        for (int i = 1; i < comandos.length + 1; i++) {
+            comandosBoot[i] = new Boot.SnesBootCommand(comandos[i-1]);
+        }
 
     }
 
     public static void carregarMapa(Boot.SnesBootCommand[] comandosBoot) {
 
-        SnesInstruction[] comandosMapa = new SnesInstruction[8];
+        SnesInstruction[] comandos = new SnesInstruction[9];
 
-        comandosMapa[0] = SnesOutput.setScreenOff();
-        comandosMapa[1] = SnesOutput.bgSetDisable(0);
-        comandosMapa[2] = SnesOutput.dmaClearVram();
-        comandosMapa[3] = SnesOutput.bgInitTileSetLz(
-            1, "&bgtiles", "&bgpalette", "0", "(&bgpalette_end - &bgpalette)",
+        comandos[0] = SnesOutput.setScreenOff();
+
+        comandos[1] = SnesOutput.bgInitTileSet(
+            1, "&bgtiles4", "&bgpalette4", "0",
+            "(&bgtiles4_end - &bgtiles4)",
+            "16 * 2",
             "BG_16COLORS", "0x4000"
         );
-        comandosMapa[4] = SnesOutput.bgInitMapSet(
-            1, "&bgmap", "(&bgmap_end - &bgmap)", "SC_32x32", "0x0000"
+        comandos[2] = SnesOutput.bgInitMapSet(
+            1, "&bgmap4", "(&bgmap4_end - &bgmap4)",
+            "SC_32x32", "0x1000"
         );
-        comandosMapa[5] = SnesOutput.bgSetEnable(1);
-        comandosMapa[6] = SnesOutput.setScreenOn();
-        comandosMapa[7] = SnesOutput.waitForVblank();
 
-        for (int i = 0; i < comandosMapa.length; i++) {
-            comandosBoot[i] = new Boot.SnesBootCommand(comandosMapa[i]);
+        comandos[3] = SnesOutput.bgSetGfxPtr(0, "0x2000");
+        comandos[4] = SnesOutput.bgSetMapPtr(0, "0x6800, SC_32x32");
+
+        comandos[5] = SnesOutput.setMode("BG_MODE1", 0);
+        comandos[6] = SnesOutput.bgSetDisable(2);
+        
+        comandos[7] = SnesOutput.setScreenOn();
+        comandos[8] = SnesOutput.waitForVblank();
+
+        for (int i = 5; i < comandos.length + 5; i++) {
+            comandosBoot[i] = new Boot.SnesBootCommand(comandos[i-5]);
         }
 
     }
-    
+
+    public static void carregarPink(Boot.SnesBootCommand[] comandosBoot) {
+
+        SnesInstruction[] comandos = new SnesInstruction[2];
+
+        comandos[0] = SnesOutput.oamInitGfxSet(
+            "&tilespink", "(&tilespink_end - &tilespink)",
+            "&palpink", "(&palpink_end - &palpink)",
+            "2", "(0x5000 >> 5)", SnesOutput.ObjSize.OBJ_SIZE32_L64
+        );
+        comandos[1] = SnesOutput.oamSetEx(
+            0, SnesOutput.ObjState.OBJ_SMALL, SnesOutput.ObjState.OBJ_HIDE
+        );
+
+        for (int i = 14; i < comandos.length + 14; i++) {
+            comandosBoot[i] = new Boot.SnesBootCommand(comandos[i-14]);
+        }
+
+    }
+
+    public static void carregarTijolos(Boot.SnesBootCommand[] comandosBoot) {
+
+        SnesInstruction[] comandos = new SnesInstruction[16];
+
+        int enderecoBase = 0x5800;
+
+        for (int i = 0, indiceSprite = 1; i < comandos.length; i += 2, indiceSprite++) {
+
+            int vramOffset = enderecoBase + ((i >> 1) * 0x20);
+            Integer indiceTile = vramOffset >> 5;
+
+            comandos[i] = SnesOutput.oamInitGfxSet(
+                "&tilestijolos", "(&tilestijolos_end - &tilestijolos)",
+                "&paltijolos", "(&paltijolos_end - &paltijolos)",
+                "3", indiceTile.toString(), SnesOutput.ObjSize.OBJ_SIZE8_L16
+            );
+
+            comandos[i + 1] = SnesOutput.oamSetEx(
+                indiceSprite, SnesOutput.ObjState.OBJ_SMALL, SnesOutput.ObjState.OBJ_HIDE
+            );
+        }
+
+        for (int i = 16; i < comandos.length + 16; i++) {
+            comandosBoot[i] = new Boot.SnesBootCommand(comandos[i-16]);
+        }
+
+    }
+
 }

@@ -14,8 +14,8 @@ public class PinkWall {
         pinkwall.setGlobalInstructions(DadosGlobais.definicoesGlobais);
 
         Processador.configurarProcessador();
-        pinkwall.setProcessor(Processador.processor);
-        pinkwall.setSnesProcesses(Processador.processes);
+        pinkwall.setProcessor(Processador.processador);
+        pinkwall.setSnesProcesses(Processador.processos);
 
         try {
 

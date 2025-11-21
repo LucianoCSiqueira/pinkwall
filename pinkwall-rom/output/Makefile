@@ -10,7 +10,7 @@ export ROMNAME := PinkWall
 all: logo bitmaps $(ROMNAME).sfc
 
 sprites.pic: sprites.bmp
-	$(GFXCONV) -s 32 -u 16 -o 16 -t bmp -i $<
+	$(GFXCONV) -s 32 -u 16 -o 16 -p -t bmp -i $<
 
 BG_4.pic: BG_4.bmp
 	$(GFXCONV) -s 8 -u 16 -o 16 -p -m -t bmp -i $<
@@ -19,7 +19,7 @@ bitmaps: fonte.pic BG_1.pic BG_2.pic BG_3.pic BG_4.pic BG_5.pic sprites.pic tijo
 
 javasnes_logo.pic: javasnes_logo.bmp
 	@echo convert javasnes_logo to map/pic/pal... $(notdir $@)
-	$(GFXCONV) -s 8 -o 16 -u 16 -p -m -t bmp -i $<
+	$(GFXCONV) -s 8 -o 16 -u 16 -e 0 -p -m -t bmp -i $<
 
 clean: cleanBuildRes cleanRom cleanGfx cleanAudio
 
@@ -35,10 +35,10 @@ BG_3.pic: BG_3.bmp
 	$(GFXCONV) -s 8 -u 16 -o 16 -p -m -t bmp -i $<
 
 fonte.pic: fonte.bmp
-	$(GFXCONV) -s 8 -u 16 -o 16 -R -t bmp -i $<
+	$(GFXCONV) -s 8 -u 16 -o 16 -p -R -t bmp -i $<
 
 tijolo.pic: tijolo.bmp
-	$(GFXCONV) -s 8 -o 16 -u 16 -t bmp -i $<
+	$(GFXCONV) -s 8 -o 16 -u 16 -p -t bmp -i $<
 
 
 BG_1.pic: BG_1.bmp

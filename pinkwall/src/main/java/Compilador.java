@@ -25,50 +25,50 @@ public class Compilador {
         Make.MakeRule textFont = new Make.MakeRule(
             "fonte.pic",
             "fonte.bmp",
-            "$(GFXCONV) -s 8 -u 16 -o 2 -e 1 -R -t bmp -i $<"
+            "$(GFXCONV) -s 8 -u 16 -o 16 -p -R -t bmp -i $<"
         );
 
         Make.MakeRule sprites = new Make.MakeRule(
             "sprites.pic",
             "sprites.bmp",
-            "$(GFXCONV) -s 32 -u 16 -o 16 -e 2 -t bmp -i $<"
+            "$(GFXCONV) -s 32 -u 16 -o 16 -p -t bmp -i $<"
         );
 
         Make.MakeRule tijolo = new Make.MakeRule(
             "tijolo.pic",
             "tijolo.bmp",
-            "$(GFXCONV) -s 8 -o 16 -u 16 -e 3 -t bmp -i $<\n"
+            "$(GFXCONV) -s 8 -o 16 -u 16 -p -t bmp -i $<\n"
         );
 
 
         Make.MakeRule bg1 = new Make.MakeRule(
             "BG_1.pic",
             "BG_1.bmp",
-            "$(GFXCONV) -s 8 -u 16 -o 16 -e 0 -p -m -t bmp -i $<"
+            "$(GFXCONV) -s 8 -u 16 -o 16 -p -m -t bmp -i $<"
         );
 
         Make.MakeRule bg2 = new Make.MakeRule(
             "BG_2.pic",
             "BG_2.bmp",
-            "$(GFXCONV) -s 8 -u 16 -o 16 -e 0 -p -m -t bmp -i $<"
+            "$(GFXCONV) -s 8 -u 16 -o 16 -p -m -t bmp -i $<"
         );
 
         Make.MakeRule bg3 = new Make.MakeRule(
             "BG_3.pic",
             "BG_3.bmp",
-            "$(GFXCONV) -s 8 -u 16 -o 16 -e 0 -p -m -t bmp -i $<"
+            "$(GFXCONV) -s 8 -u 16 -o 16 -p -m -t bmp -i $<"
         );
 
         Make.MakeRule bg4 = new Make.MakeRule(
             "BG_4.pic",
             "BG_4.bmp",
-            "$(GFXCONV) -s 8 -u 16 -o 16 -e 0 -p -m -t bmp -i $<"
+            "$(GFXCONV) -s 8 -u 16 -o 16 -p -m -t bmp -i $<"
         );
 
         Make.MakeRule bg5 = new Make.MakeRule(
             "BG_5.pic",
             "BG_5.bmp",
-            "$(GFXCONV) -s 8 -u 16 -o 16 -e 0 -p -m -t bmp -i $<"
+            "$(GFXCONV) -s 8 -u 16 -o 16 -p -m -t bmp -i $<"
         );
 
 

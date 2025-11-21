@@ -32,7 +32,7 @@ public class SequenciaDeBoot {
         comandos[0] = SnesOutput.consoleSetTextGfxPtr("0x3000");
         comandos[1] = SnesOutput.consoleSetTextMapPtr("0x6800");
         comandos[2] = SnesOutput.consoleSetTextOffset("0x0100");
-        comandos[3] = SnesOutput.consoleInitText(0, 16 * 2, "&tilesfont", "&palfont");
+        comandos[3] = SnesOutput.consoleInitText(1, 16 * 2, "&tilesfont", "&palfont");
 
         for (int i = 1; i < comandos.length + 1; i++) {
             comandosBoot[i] = new Boot.SnesBootCommand(comandos[i-1]);
@@ -49,12 +49,12 @@ public class SequenciaDeBoot {
         comandos[1] = SnesOutput.bgInitTileSet(
             1, "&bgtiles4", "&bgpalette4", "0",
             "(&bgtiles4_end - &bgtiles4)",
-            "16 * 2",
+            "(&bgpalette4_end - &bgpalette4)",
             "BG_16COLORS", "0x4000"
         );
         comandos[2] = SnesOutput.bgInitMapSet(
             1, "&bgmap4", "(&bgmap4_end - &bgmap4)",
-            "SC_32x32", "0x1000"
+            "SC_64x64", "0x1000"
         );
 
         comandos[3] = SnesOutput.bgSetGfxPtr(0, "0x2000");

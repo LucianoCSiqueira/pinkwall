@@ -18,7 +18,23 @@ public class CarregarDados {
         colocarDadosAppData(appData, dadosBackground4(), (byte) 6);
         colocarDadosAppData(appData, dadosBackground5(), (byte) 7);
         
+        colocarDadosAppData(appData, dadosSom(), (byte) 8);
+        
         return appData;
+
+    }
+
+    public static Data[] dadosSom() {
+
+        Data[] dados = new Data[2];
+
+        Data soundLose = new Data("losebrrsound", "lose.brr", true);
+        Data soundMove = new Data("movebrrsound", "move.brr", true);
+
+        dados[0] = soundLose;
+        dados[1] = soundMove;
+
+        return dados;
 
     }
 

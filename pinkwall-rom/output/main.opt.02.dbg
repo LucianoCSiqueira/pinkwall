@@ -1,0 +1,3315 @@
+.include "hdr.asm"
+.accu 16
+.index 16
+.16bit
+.define __printHiScore_locals 0
+.define __limparPrintHiScore_locals 0
+.define __comecarJogo_locals 0
+.define __gameOver_locals 0
+.define __printScoreGameOver_locals 0
+.define __atualizarHiScore_locals 8
+.define __printDadosFase_locals 0
+.define __atualizarLevel_locals 0
+.define __atualizarScore_locals 12
+.define __carregarTijolo_locals 0
+.define __atualizarTijolo_locals 0
+.define __EhParaCarregarPink_locals 0
+.define __carregarPink_locals 0
+.define __atualizarPink_locals 4
+.define __mudarBackground_locals 0
+.define __processor_locals 0
+.define __main_locals 17
+
+.SECTION ".printHiScoretext_0x0" SUPERFREE
+
+printHiScore:
+.ifgr __printHiScore_locals 0
+tsa
+sec
+sbc #__printHiScore_locals
+tas
+.endif
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+cmp #4
+beq +
+brl __local_0
++
+lda.l HiScore + 0
+pha
+pea.w :tccs_{WLA_FILENAME}_L.{WLA_FILENAME}8
+pea.w tccs_{WLA_FILENAME}_L.{WLA_FILENAME}8 + 0
+pea.w 26
+pea.w 2
+jsr.l consoleDrawText
+tsa
+clc
+adc #10
+tas
+__local_0:
+__local_1:
+.ifgr __printHiScore_locals 0
+tsa
+clc
+adc #__printHiScore_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".limparPrintHiScoretext_0x1" SUPERFREE
+
+limparPrintHiScore:
+.ifgr __limparPrintHiScore_locals 0
+tsa
+sec
+sbc #__limparPrintHiScore_locals
+tas
+.endif
+pea.w :tccs_{WLA_FILENAME}_L.{WLA_FILENAME}9
+pea.w tccs_{WLA_FILENAME}_L.{WLA_FILENAME}9 + 0
+pea.w 26
+pea.w 1
+jsr.l consoleDrawText
+tsa
+clc
+adc #8
+tas
+__local_2:
+.ifgr __limparPrintHiScore_locals 0
+tsa
+clc
+adc #__limparPrintHiScore_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".comecarJogotext_0x2" SUPERFREE
+
+comecarJogo:
+.ifgr __comecarJogo_locals 0
+tsa
+sec
+sbc #__comecarJogo_locals
+tas
+.endif
+jsr.l spcProcess
+lda.l pad_keys + 0
+and.w #4096
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_3
++
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+ldx #1
+sec
+sbc #4
+tay
+beq +
+dex
++
+stx.b tcc__r5
+txa
+bne +
+__local_3:
+brl __local_4
++
+lda.w #1
+sta.b tcc__r0
+sep #$20
+sta.l mudarBG + 0
+rep #$20
+__local_4:
+__local_5:
+.ifgr __comecarJogo_locals 0
+tsa
+clc
+adc #__comecarJogo_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".gameOvertext_0x3" SUPERFREE
+
+gameOver:
+.ifgr __gameOver_locals 0
+tsa
+sec
+sbc #__gameOver_locals
+tas
+.endif
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+cmp #3
+beq +
+brl __local_6
++
+sep #$20
+lda #0
+pha
+rep #$20
+jsr.l spcPlaySound
+tsa
+clc
+adc #1
+tas
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+lda.w #1
+sta.b tcc__r0
+sep #$20
+sta.l mudarBG + 0
+rep #$20
+__local_6:
+__local_7:
+.ifgr __gameOver_locals 0
+tsa
+clc
+adc #__gameOver_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".printScoreGameOvertext_0x4" SUPERFREE
+
+printScoreGameOver:
+.ifgr __printScoreGameOver_locals 0
+tsa
+sec
+sbc #__printScoreGameOver_locals
+tas
+.endif
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+cmp #3
+beq +
+brl __local_8
++
+lda.l Score + 0
+pha
+pea.w :tccs_{WLA_FILENAME}_L.{WLA_FILENAME}10
+pea.w tccs_{WLA_FILENAME}_L.{WLA_FILENAME}10 + 0
+pea.w 26
+pea.w 2
+jsr.l consoleDrawText
+tsa
+clc
+adc #10
+tas
+__local_8:
+sep #$20
+lda #0
+pha
+rep #$20
+jsr.l spcPlaySound
+tsa
+clc
+adc #1
+tas
+__local_9:
+.ifgr __printScoreGameOver_locals 0
+tsa
+clc
+adc #__printScoreGameOver_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".atualizarHiScoretext_0x5" SUPERFREE
+
+atualizarHiScore:
+.ifgr __atualizarHiScore_locals 0
+tsa
+sec
+sbc #__atualizarHiScore_locals
+tas
+.endif
+lda.l Score + 0
+sta.b tcc__r0
+lda.l Score + 2
+sta.b tcc__r1
+lda.b tcc__r0
+sta -4 + __atualizarHiScore_locals + 1,s
+lda.b tcc__r0h
+sta -2 + __atualizarHiScore_locals + 1,s
+lda.b tcc__r1
+sta -8 + __atualizarHiScore_locals + 1,s
+lda.b tcc__r1h
+sta -6 + __atualizarHiScore_locals + 1,s
+lda.l HiScore + 0
+sta.b tcc__r2
+lda.l HiScore + 2
+sta.b tcc__r0
+lda -8 + __atualizarHiScore_locals + 1,s
+sta.b tcc__r1
+ldx #1
+sec
+sbc.b tcc__r0
+tay
+bcs ++
++ dex
+++
+stx.b tcc__r5
+txa
+bne +
+brl __local_10
++
+tya
+bne __local_11
+lda -4 + __atualizarHiScore_locals + 1,s
+sta.b tcc__r0
+ldx #1
+sec
+sbc.b tcc__r2
+tay
+bcs ++
++ dex
+++
+stx.b tcc__r5
+txa
+bne +
+__local_10:
+brl __local_12
++
+__local_11:
+lda.l Score + 0
+sta.b tcc__r0
+lda.l Score + 2
+sta.b tcc__r1
+lda.b tcc__r0
+sta.l HiScore + 0
+lda.b tcc__r1
+sta.l HiScore + 2
+pea.w 4
+pea.w :Score
+pea.w Score + 0
+jsr.l consoleCopySram
+tsa
+clc
+adc #6
+tas
+__local_12:
+__local_13:
+.ifgr __atualizarHiScore_locals 0
+tsa
+clc
+adc #__atualizarHiScore_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".printDadosFasetext_0x6" SUPERFREE
+
+printDadosFase:
+.ifgr __printDadosFase_locals 0
+tsa
+sec
+sbc #__printDadosFase_locals
+tas
+.endif
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+ldx #1
+sec
+sbc.w #2
+tay
+beq +++
+bvc +
+eor #$8000
++
+bmi +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+bne +
+brl __local_14
++
+lda.l HiScore + 0
+pha
+pea.w :tccs_{WLA_FILENAME}_L.{WLA_FILENAME}11
+pea.w tccs_{WLA_FILENAME}_L.{WLA_FILENAME}11 + 0
+pea.w 4
+pea.w 20
+jsr.l consoleDrawText
+tsa
+clc
+adc #10
+tas
+lda.l Score + 0
+pha
+pea.w :tccs_{WLA_FILENAME}_L.{WLA_FILENAME}12
+pea.w tccs_{WLA_FILENAME}_L.{WLA_FILENAME}12 + 0
+pea.w 6
+pea.w 20
+jsr.l consoleDrawText
+tsa
+clc
+adc #10
+tas
+lda.w #0
+sep #$20
+lda.l qtdVidas + 0
+rep #$20
+sta.b tcc__r0
+lda.w #4
+sec
+sbc.b tcc__r0
+pha
+pea.w :tccs_{WLA_FILENAME}_L.{WLA_FILENAME}13
+pea.w tccs_{WLA_FILENAME}_L.{WLA_FILENAME}13 + 0
+pea.w 8
+pea.w 20
+jsr.l consoleDrawText
+tsa
+clc
+adc #10
+tas
+lda.w #0
+sep #$20
+lda.l qtdVidas + 0
+rep #$20
+pha
+pea.w :tccs_{WLA_FILENAME}_L.{WLA_FILENAME}14
+pea.w tccs_{WLA_FILENAME}_L.{WLA_FILENAME}14 + 0
+pea.w 10
+pea.w 20
+jsr.l consoleDrawText
+tsa
+clc
+adc #10
+tas
+__local_14:
+__local_15:
+.ifgr __printDadosFase_locals 0
+tsa
+clc
+adc #__printDadosFase_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".atualizarLeveltext_0x7" SUPERFREE
+
+atualizarLevel:
+.ifgr __atualizarLevel_locals 0
+tsa
+sec
+sbc #__atualizarLevel_locals
+tas
+.endif
+lda.l yTijolo + 0
+sta.b tcc__r0
+ldx #1
+sec
+sbc.w #215
+tay
+beq ++
+bvc +
+eor #$8000
++
+bpl +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+bne +
+brl __local_16
++
+bra __local_17
+__local_16:
+lda.w #0
+sta.b tcc__r0
+bra __local_18
+__local_17:
+lda.w #1
+sta.b tcc__r0
+__local_18:
+sep #$20
+lda.b tcc__r0
+sta.l mudarBG + 0
+rep #$20
+lda.l yTijolo + 0
+sta.b tcc__r0
+ldx #1
+sec
+sbc.w #215
+tay
+beq ++
+bvc +
+eor #$8000
++
+bpl +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+bne +
+brl __local_19
++
+bra __local_20
+__local_19:
+lda.w #0
+sep #$20
+lda.l qtdVidas + 0
+rep #$20
+sta.b tcc__r0
+bra __local_21
+__local_20:
+lda.w #1
+sta.b tcc__r0
+__local_21:
+lda.w #0
+sep #$20
+lda.l qtdVidas + 0
+rep #$20
+sec
+sbc.b tcc__r0
+sta.b tcc__r1
+sep #$20
+sta.l qtdVidas + 0
+rep #$20
+__local_22:
+.ifgr __atualizarLevel_locals 0
+tsa
+clc
+adc #__atualizarLevel_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".atualizarScoretext_0x8" SUPERFREE
+
+atualizarScore:
+.ifgr __atualizarScore_locals 0
+tsa
+sec
+sbc #__atualizarScore_locals
+tas
+.endif
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+clc
+adc.w #32
+sta.b tcc__r0
+lda.l xTijolo + 0
+sta.b tcc__r1
+sec
+sbc.b tcc__r0
+bvc +
+eor #$8000
++
+bmi +
+brl __local_23
++
+lda.l xTijolo + 0
+clc
+adc.w #8
+sta.b tcc__r0
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+sta.b tcc__r1
+ldx #1
+lda.b tcc__r0
+sec
+sbc.b tcc__r1
+tay
+beq ++
+bvc +
+eor #$8000
++
+bpl +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+bne +
+__local_23:
+brl __local_24
++
+lda.l yTijolo + 0
+sta.b tcc__r0
+sec
+sbc.w #224
+bvc +
+eor #$8000
++
+bmi +
+brl __local_25
++
+lda.l yTijolo + 0
+clc
+adc.w #8
+sta.b tcc__r0
+ldx #1
+sec
+sbc.w #192
+tay
+beq ++
+bvc +
+eor #$8000
++
+bpl +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+bne +
+__local_25:
+brl __local_26
++
+__local_24:
+lda #1
+bra +
+__local_26:
+lda #0
++
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_27
++
+bra __local_28
+__local_27:
+lda.l Score + 0
+sta.b tcc__r0
+lda.l Score + 2
+sta.b tcc__r1
+bra __local_29
+__local_28:
+lda.w #1000
+sta.b tcc__r0
+lda.w #0
+sta.b tcc__r1
+__local_29:
+lda.b tcc__r0
+sta -4 + __atualizarScore_locals + 1,s
+lda.b tcc__r1
+sta -2 + __atualizarScore_locals + 1,s
+lda.l Score + 0
+sta.b tcc__r2
+lda.l Score + 2
+sta.b tcc__r0
+lda.b tcc__r2
+sta -8 + __atualizarScore_locals + 1,s
+lda.b tcc__r2h
+sta -6 + __atualizarScore_locals + 1,s
+lda.b tcc__r0
+sta -12 + __atualizarScore_locals + 1,s
+lda.b tcc__r0h
+sta -10 + __atualizarScore_locals + 1,s
+lda -4 + __atualizarScore_locals + 1,s
+sta.b tcc__r1
+stz.b tcc__r0h
+tsa
+clc
+adc #(-4 + __atualizarScore_locals + 1) + 2
+sta.b tcc__r0
+lda.b [tcc__r0]
+sta.b tcc__r2
+lda -8 + __atualizarScore_locals + 1,s
+clc
+adc.b tcc__r1
+sta.b tcc__r0
+lda -12 + __atualizarScore_locals + 1,s
+adc.b tcc__r2
+sta.b tcc__r1
+lda.b tcc__r0
+sta.l Score + 0
+lda.b tcc__r1
+sta.l Score + 2
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+clc
+adc.w #32
+sta.b tcc__r0
+lda.l xTijolo + 0
+sta.b tcc__r1
+sec
+sbc.b tcc__r0
+bvc +
+eor #$8000
++
+bmi +
+brl __local_30
++
+lda.l xTijolo + 0
+clc
+adc.w #8
+sta.b tcc__r0
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+sta.b tcc__r1
+ldx #1
+lda.b tcc__r0
+sec
+sbc.b tcc__r1
+tay
+beq ++
+bvc +
+eor #$8000
++
+bpl +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+bne +
+__local_30:
+brl __local_31
++
+lda.l yTijolo + 0
+sta.b tcc__r0
+sec
+sbc.w #224
+bvc +
+eor #$8000
++
+bmi +
+brl __local_32
++
+lda.l yTijolo + 0
+clc
+adc.w #8
+sta.b tcc__r0
+ldx #1
+sec
+sbc.w #192
+tay
+beq ++
+bvc +
+eor #$8000
++
+bpl +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+bne +
+__local_32:
+brl __local_33
++
+__local_31:
+lda #1
+bra +
+__local_33:
+lda #0
++
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_34
++
+bra __local_35
+__local_34:
+lda.w #0
+sta.b tcc__r0
+bra __local_36
+__local_35:
+lda.w #1
+sta.b tcc__r0
+__local_36:
+sep #$20
+lda.b tcc__r0
+sta.l colidiuTijolo + 0
+rep #$20
+__local_37:
+.ifgr __atualizarScore_locals 0
+tsa
+clc
+adc #__atualizarScore_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".carregarTijolotext_0x9" SUPERFREE
+
+carregarTijolo:
+.ifgr __carregarTijolo_locals 0
+tsa
+sec
+sbc #__carregarTijolo_locals
+tas
+.endif
+lda.w #65520
+sta.l yTijolo + 0
+jsr.l rand
+lda.b tcc__r0
+and.w #200
+sta.l xTijolo + 0
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+sec
+sbc.w #3
+bvc +
+eor #$8000
++
+bmi +
+brl __local_38
++
+bra __local_39
+__local_38:
+lda.w #1
+sta.b tcc__r0
+bra __local_40
+__local_39:
+lda.w #0
+sta.b tcc__r0
+__local_40:
+lda.b tcc__r0
+and.w #255
+sep #$20
+pha
+lda #0
+pha
+rep #$20
+pea.w 1
+jsr.l oamSetEx
+tsa
+clc
+adc #4
+tas
+__local_41:
+.ifgr __carregarTijolo_locals 0
+tsa
+clc
+adc #__carregarTijolo_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".atualizarTijolotext_0xa" SUPERFREE
+
+atualizarTijolo:
+.ifgr __atualizarTijolo_locals 0
+tsa
+sec
+sbc #__atualizarTijolo_locals
+tas
+.endif
+lda.l snes_vblank_count + 0
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_42
++
+lda #1
+bra +
+__local_42:
+lda #0
++
+sta.b tcc__r0
+cmp #0
+beq +
+brl __local_43
++
+lda.l yTijolo + 0
+sta.b tcc__r0
+inc.b tcc__r0
+bra __local_44
+__local_43:
+lda.l yTijolo + 0
+sta.b tcc__r0
+__local_44:
+__local_45:
+lda.b tcc__r0
+sta.l yTijolo + 0
+lda.l yTijolo + 0
+sta.b tcc__r0
+ldx #1
+sec
+sbc.w #215
+tay
+beq ++
+bvc +
+eor #$8000
++
+bpl +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+beq +
+brl __local_46
++
+lda.w #0
+sep #$20
+lda.l colidiuTijolo + 0
+rep #$20
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+beq +
+__local_46:
+brl __local_47
++
+lda #0
+bra +
+__local_47:
+lda #1
++
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_48
++
+bra __local_49
+__local_48:
+lda.l yTijolo + 0
+sta.b tcc__r0
+bra __local_50
+__local_49:
+lda.w #65520
+sta.b tcc__r0
+__local_50:
+lda.b tcc__r0
+sta.l yTijolo + 0
+lda.l yTijolo + 0
+sta.b tcc__r0
+ldx #1
+sec
+sbc.w #215
+tay
+beq ++
+bvc +
+eor #$8000
++
+bpl +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+beq +
+brl __local_51
++
+lda.w #0
+sep #$20
+lda.l colidiuTijolo + 0
+rep #$20
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+beq +
+__local_51:
+brl __local_52
++
+lda #0
+bra +
+__local_52:
+lda #1
++
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_53
++
+jsr.l rand
+lda.b tcc__r0
+and.w #200
+sta.b tcc__r0
+bra __local_54
+__local_53:
+lda.l xTijolo + 0
+sta.b tcc__r0
+__local_54:
+__local_55:
+lda.b tcc__r0
+sta.l xTijolo + 0
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+sec
+sbc.w #3
+bvc +
+eor #$8000
++
+bmi +
+brl __local_56
++
+bra __local_57
+__local_56:
+lda.w #1
+sta.b tcc__r0
+bra __local_58
+__local_57:
+lda.w #0
+sta.b tcc__r0
+__local_58:
+lda.b tcc__r0
+and.w #255
+sep #$20
+pha
+lda #0
+pha
+rep #$20
+pea.w 1
+jsr.l oamSetEx
+tsa
+clc
+adc #4
+tas
+__local_59:
+.ifgr __atualizarTijolo_locals 0
+tsa
+clc
+adc #__atualizarTijolo_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".EhParaCarregarPinktext_0xb" SUPERFREE
+
+EhParaCarregarPink:
+.ifgr __EhParaCarregarPink_locals 0
+tsa
+sec
+sbc #__EhParaCarregarPink_locals
+tas
+.endif
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+cmp #0
+beq +
+brl __local_60
++
+bra __local_61
+__local_60:
+lda.w #0
+sta.b tcc__r0
+bra __local_62
+__local_61:
+lda.w #1
+sta.b tcc__r0
+__local_62:
+sep #$20
+lda.b tcc__r0
+sta.l ehParaCarregarPink + 0
+rep #$20
+__local_63:
+.ifgr __EhParaCarregarPink_locals 0
+tsa
+clc
+adc #__EhParaCarregarPink_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".carregarPinktext_0xc" SUPERFREE
+
+carregarPink:
+.ifgr __carregarPink_locals 0
+tsa
+sec
+sbc #__carregarPink_locals
+tas
+.endif
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+cmp #1
+beq +
+brl __local_64
++
+lda.w #0
+sep #$20
+lda.l animFrame + 0
+rep #$20
+sta.b tcc__r0
+sep #$20
+lda #2
+pha
+rep #$20
+pei (tcc__r0)
+pea.w (0 * 256 + 0)
+sep #$20
+lda #3
+pha
+rep #$20
+pea.w 192
+pea.w 100
+pea.w 0
+jsr.l oamSet
+tsa
+clc
+adc #12
+tas
+pea.w (0 * 256 + 0)
+sep #$20
+rep #$20
+pea.w 0
+jsr.l oamSetEx
+tsa
+clc
+adc #4
+tas
+sep #$20
+lda #0
+pha
+rep #$20
+pea.w 0
+jsr.l oamSetVisible
+tsa
+clc
+adc #3
+tas
+jmp.w __local_65
+__local_64:
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+ldx #1
+sec
+sbc #3
+tay
+beq +
+dex
++
+stx.b tcc__r5
+txa
+beq +
+brl __local_66
++
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+ldx #1
+sec
+sbc #4
+tay
+beq +
+dex
++
+stx.b tcc__r5
+txa
+beq +
+__local_66:
+brl __local_67
++
+jmp.w __local_68
+__local_67:
+lda.w #0
+sep #$20
+lda.l animFrame + 0
+rep #$20
+sta.b tcc__r0
+sep #$20
+lda #2
+pha
+rep #$20
+pei (tcc__r0)
+pea.w (0 * 256 + 0)
+sep #$20
+lda #3
+pha
+rep #$20
+pea.w 192
+pea.w 100
+pea.w 0
+jsr.l oamSet
+tsa
+clc
+adc #12
+tas
+pea.w (1 * 256 + 0)
+sep #$20
+rep #$20
+pea.w 0
+jsr.l oamSetEx
+tsa
+clc
+adc #4
+tas
+sep #$20
+lda #1
+pha
+rep #$20
+pea.w 0
+jsr.l oamSetVisible
+tsa
+clc
+adc #3
+tas
+__local_68:
+__local_65:
+__local_69:
+.ifgr __carregarPink_locals 0
+tsa
+clc
+adc #__carregarPink_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".atualizarPinktext_0xd" SUPERFREE
+
+atualizarPink:
+.ifgr __atualizarPink_locals 0
+tsa
+sec
+sbc #__atualizarPink_locals
+tas
+.endif
+lda.l pad_keys + 0
+and.w #512
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_70
++
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+sta.b tcc__r0
+dec.b tcc__r0
+bra __local_71
+__local_70:
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+sta.b tcc__r0
+__local_71:
+__local_72:
+sep #$20
+lda.b tcc__r0
+sta.l xPink + 0
+rep #$20
+lda.l pad_keys + 0
+and.w #256
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_73
++
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+sta.b tcc__r0
+inc.b tcc__r0
+bra __local_74
+__local_73:
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+sta.b tcc__r0
+__local_74:
+__local_75:
+sep #$20
+lda.b tcc__r0
+sta.l xPink + 0
+rep #$20
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+sta.b tcc__r0
+sec
+sbc.w #0
+bvc +
+eor #$8000
++
+bmi +
+brl __local_76
++
+bra __local_77
+__local_76:
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+sta.b tcc__r0
+bra __local_78
+__local_77:
+lda.w #0
+sta.b tcc__r0
+__local_78:
+sep #$20
+lda.b tcc__r0
+sta.l xPink + 0
+rep #$20
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+sta.b tcc__r0
+ldx #1
+sec
+sbc.w #192
+tay
+beq ++
+bvc +
+eor #$8000
++
+bpl +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+bne +
+brl __local_79
++
+bra __local_80
+__local_79:
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+sta.b tcc__r0
+bra __local_81
+__local_80:
+lda.w #192
+sta.b tcc__r0
+__local_81:
+sep #$20
+lda.b tcc__r0
+sta.l xPink + 0
+rep #$20
+lda.l pad_keys + 0
+and.w #512
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+beq +
+brl __local_82
++
+lda.l pad_keys + 0
+and.w #256
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+beq +
+__local_82:
+brl __local_83
++
+lda #0
+bra +
+__local_83:
+lda #1
++
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_84
++
+lda.w #0
+sep #$20
+lda.l animFrame + 0
+rep #$20
+sta.b tcc__r0
+inc.b tcc__r0
+bra __local_85
+__local_84:
+lda.w #0
+sep #$20
+lda.l animFrame + 0
+rep #$20
+sta.b tcc__r0
+__local_85:
+__local_86:
+sep #$20
+lda.b tcc__r0
+sta.l animFrame + 0
+rep #$20
+lda.w #0
+sep #$20
+lda.l animFrame + 0
+rep #$20
+sta.b tcc__r0
+ldx #1
+sec
+sbc.w #4
+tay
+bvc +
+eor #$8000
++
+bpl +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+bne +
+brl __local_87
++
+bra __local_88
+__local_87:
+lda.w #0
+sep #$20
+lda.l animFrame + 0
+rep #$20
+sta.b tcc__r0
+bra __local_89
+__local_88:
+lda.w #0
+sta.b tcc__r0
+__local_89:
+sep #$20
+lda.b tcc__r0
+sta.l animFrame + 0
+rep #$20
+lda.l pad_keys + 0
+and.w #512
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_90
++
+bra __local_91
+__local_90:
+lda.w #0
+sta.b tcc__r0
+bra __local_92
+__local_91:
+lda.w #0
+sta.b tcc__r0
+__local_92:
+lda.b tcc__r0
+and.w #255
+sep #$20
+pha
+lda #0
+pha
+rep #$20
+pea.w 0
+jsr.l oamSetEx
+tsa
+clc
+adc #4
+tas
+lda.w #0
+sep #$20
+lda.l xPink + 0
+rep #$20
+sta.b tcc__r0
+lda.l pad_keys + 0
+and.w #512
+sta.b tcc__r1
+lda.b tcc__r0
+sta -4 + __atualizarPink_locals + 1,s
+lda.b tcc__r0h
+sta -2 + __atualizarPink_locals + 1,s
+lda.b tcc__r1 ; DON'T OPTIMIZE
+bne +
+brl __local_93
++
+lda.w #0
+sep #$20
+lda.l animFrame + 0
+rep #$20
+sta.b tcc__r0
+lda.w #:animLeft
+sta.b tcc__r1h
+lda.w #animLeft + 0
+clc
+adc.b tcc__r0
+sta.b tcc__r1
+bra __local_94
+__local_93:
+lda.w #0
+sep #$20
+lda.l animFrame + 0
+rep #$20
+sta.b tcc__r0
+lda.w #:animRight
+sta.b tcc__r1h
+lda.w #animRight + 0
+clc
+adc.b tcc__r0
+sta.b tcc__r1
+lda.w #0
+sep #$20
+lda.b [tcc__r1]
+rep #$20
+xba
+xba
+bpl +
+ora.w #$ff00
++
+sta.b tcc__r0
+bra __local_95
+__local_94:
+lda.w #0
+sep #$20
+lda.b [tcc__r1]
+rep #$20
+xba
+xba
+bpl +
+ora.w #$ff00
++
+sta.b tcc__r0
+__local_95:
+lda.b tcc__r0
+and.w #255
+sta.b tcc__r0
+lda.w #0
+sep #$20
+lda.l animFrame + 0
+rep #$20
+sta.b tcc__r1
+sep #$20
+lda #2
+pha
+rep #$20
+pei (tcc__r1)
+sep #$20
+lda #0
+pha
+lda.b tcc__r0
+pha
+lda #3
+pha
+rep #$20
+pea.w 192
+lda 4 + __atualizarPink_locals + 1,s
+pha
+pea.w 0
+jsr.l oamSet
+tsa
+clc
+adc #12
+tas
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l spcPlaySound
+tsa
+clc
+adc #1
+tas
+__local_96:
+.ifgr __atualizarPink_locals 0
+tsa
+clc
+adc #__atualizarPink_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".mudarBackgroundtext_0xe" SUPERFREE
+
+mudarBackground:
+.ifgr __mudarBackground_locals 0
+tsa
+sec
+sbc #__mudarBackground_locals
+tas
+.endif
+lda.w #0
+sep #$20
+lda.l mudarBG + 0
+rep #$20
+sta.b tcc__r0
+lda.w #0
+sep #$20
+lda.l mudarBG + 0
+rep #$20
+sta.b tcc__r1
+and.b tcc__r0
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_97
++
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+ldx #1
+sec
+sbc.w #4
+tay
+bvc +
+eor #$8000
++
+bpl +++
+++
+dex
++++
+stx.b tcc__r5
+txa
+bne +
+brl __local_98
++
+bra __local_99
+__local_98:
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+inc.b tcc__r0
+bra __local_100
+__local_99:
+lda.w #0
+sta.b tcc__r0
+__local_100:
+sep #$20
+lda.b tcc__r0
+sta.l atualBG + 0
+rep #$20
+lda.w #0
+sep #$20
+lda.l atualBG + 0
+rep #$20
+sta.b tcc__r0
+bra __local_101
+bra __local_102
+__local_101:
+lda.b tcc__r0
+cmp #0
+beq +
+brl __local_103
++
+__local_102:
+jsr.l limparPrintHiScore
+jsr.l setScreenOff
+lda.w #1
+sep #$20
+sta.l ehParaCarregarTijolo + 0
+rep #$20
+jsr.l WaitForVBlank
+lda.w #:bgtiles0_end
+sta.b tcc__r0h
+lda.w #bgtiles0_end + 0
+sta.b tcc__r0
+lda.w #:bgtiles0
+lda.w #bgtiles0 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+lda.w #:bgpalette0_end
+lda.w #bgpalette0_end + 0
+sta.b tcc__r1
+lda.w #:bgpalette0
+lda.w #bgpalette0 + 0
+sta.b tcc__r2
+sec
+lda.b tcc__r1
+sbc.b tcc__r2
+sta.b tcc__r1
+pea.w 16384
+pea.w 16
+pei (tcc__r1)
+pei (tcc__r0)
+sep #$20
+lda #0
+pha
+rep #$20
+pea.w :bgpalette0
+pea.w bgpalette0 + 0
+pea.w :bgtiles0
+pea.w bgtiles0 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitTileSet
+tsa
+clc
+adc #18
+tas
+lda.w #:bgmap0_end
+lda.w #bgmap0_end + 0
+sta.b tcc__r0
+lda.w #:bgmap0
+lda.w #bgmap0 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+pea.w 4096
+sep #$20
+lda #3
+pha
+rep #$20
+pei (tcc__r0)
+pea.w :bgmap0
+pea.w bgmap0 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitMapSet
+tsa
+clc
+adc #10
+tas
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l setScreenOn
+jmp.w __local_104
+bra __local_105
+__local_103:
+lda.b tcc__r0
+cmp #1
+beq +
+brl __local_106
++
+__local_105:
+jsr.l limparPrintHiScore
+jsr.l setScreenOff
+lda.w #1
+sep #$20
+sta.l ehParaCarregarTijolo + 0
+rep #$20
+jsr.l WaitForVBlank
+lda.w #:bgtiles1_end
+sta.b tcc__r0h
+lda.w #bgtiles1_end + 0
+sta.b tcc__r0
+lda.w #:bgtiles1
+lda.w #bgtiles1 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+lda.w #:bgpalette1_end
+lda.w #bgpalette1_end + 0
+sta.b tcc__r1
+lda.w #:bgpalette1
+lda.w #bgpalette1 + 0
+sta.b tcc__r2
+sec
+lda.b tcc__r1
+sbc.b tcc__r2
+sta.b tcc__r1
+pea.w 16384
+pea.w 16
+pei (tcc__r1)
+pei (tcc__r0)
+sep #$20
+lda #0
+pha
+rep #$20
+pea.w :bgpalette1
+pea.w bgpalette1 + 0
+pea.w :bgtiles1
+pea.w bgtiles1 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitTileSet
+tsa
+clc
+adc #18
+tas
+lda.w #:bgmap1_end
+lda.w #bgmap1_end + 0
+sta.b tcc__r0
+lda.w #:bgmap1
+lda.w #bgmap1 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+pea.w 4096
+sep #$20
+lda #3
+pha
+rep #$20
+pei (tcc__r0)
+pea.w :bgmap1
+pea.w bgmap1 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitMapSet
+tsa
+clc
+adc #10
+tas
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l setScreenOn
+jmp.w __local_107
+bra __local_108
+__local_106:
+lda.b tcc__r0
+cmp #2
+beq +
+brl __local_109
++
+__local_108:
+jsr.l limparPrintHiScore
+jsr.l setScreenOff
+lda.w #1
+sep #$20
+sta.l ehParaCarregarTijolo + 0
+rep #$20
+jsr.l WaitForVBlank
+lda.w #:bgtiles2_end
+sta.b tcc__r0h
+lda.w #bgtiles2_end + 0
+sta.b tcc__r0
+lda.w #:bgtiles2
+lda.w #bgtiles2 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+lda.w #:bgpalette2_end
+lda.w #bgpalette2_end + 0
+sta.b tcc__r1
+lda.w #:bgpalette2
+lda.w #bgpalette2 + 0
+sta.b tcc__r2
+sec
+lda.b tcc__r1
+sbc.b tcc__r2
+sta.b tcc__r1
+pea.w 16384
+pea.w 16
+pei (tcc__r1)
+pei (tcc__r0)
+sep #$20
+lda #0
+pha
+rep #$20
+pea.w :bgpalette2
+pea.w bgpalette2 + 0
+pea.w :bgtiles2
+pea.w bgtiles2 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitTileSet
+tsa
+clc
+adc #18
+tas
+lda.w #:bgmap2_end
+lda.w #bgmap2_end + 0
+sta.b tcc__r0
+lda.w #:bgmap2
+lda.w #bgmap2 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+pea.w 4096
+sep #$20
+lda #3
+pha
+rep #$20
+pei (tcc__r0)
+pea.w :bgmap2
+pea.w bgmap2 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitMapSet
+tsa
+clc
+adc #10
+tas
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l setScreenOn
+jmp.w __local_110
+bra __local_111
+__local_109:
+lda.b tcc__r0
+cmp #3
+beq +
+brl __local_112
++
+__local_111:
+jsr.l limparPrintHiScore
+jsr.l setScreenOff
+lda.w #0
+sep #$20
+sta.l ehParaCarregarPink + 0
+rep #$20
+lda.w #0
+sep #$20
+sta.l ehParaCarregarTijolo + 0
+rep #$20
+jsr.l WaitForVBlank
+lda.w #:bgtiles3_end
+sta.b tcc__r0h
+lda.w #bgtiles3_end + 0
+sta.b tcc__r0
+lda.w #:bgtiles3
+lda.w #bgtiles3 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+lda.w #:bgpalette3_end
+lda.w #bgpalette3_end + 0
+sta.b tcc__r1
+lda.w #:bgpalette3
+lda.w #bgpalette3 + 0
+sta.b tcc__r2
+sec
+lda.b tcc__r1
+sbc.b tcc__r2
+sta.b tcc__r1
+pea.w 16384
+pea.w 16
+pei (tcc__r1)
+pei (tcc__r0)
+sep #$20
+lda #0
+pha
+rep #$20
+pea.w :bgpalette3
+pea.w bgpalette3 + 0
+pea.w :bgtiles3
+pea.w bgtiles3 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitTileSet
+tsa
+clc
+adc #18
+tas
+lda.w #:bgmap3_end
+lda.w #bgmap3_end + 0
+sta.b tcc__r0
+lda.w #:bgmap3
+lda.w #bgmap3 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+pea.w 4096
+sep #$20
+lda #3
+pha
+rep #$20
+pei (tcc__r0)
+pea.w :bgmap3
+pea.w bgmap3 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitMapSet
+tsa
+clc
+adc #10
+tas
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l setScreenOn
+jmp.w __local_113
+bra __local_114
+__local_112:
+lda.b tcc__r0
+cmp #4
+beq +
+brl __local_115
++
+__local_114:
+jsr.l limparPrintHiScore
+jsr.l setScreenOff
+lda.w #0
+sep #$20
+sta.l ehParaCarregarPink + 0
+rep #$20
+lda.w #0
+sep #$20
+sta.l ehParaCarregarTijolo + 0
+rep #$20
+jsr.l WaitForVBlank
+lda.w #:bgtiles4_end
+sta.b tcc__r0h
+lda.w #bgtiles4_end + 0
+sta.b tcc__r0
+lda.w #:bgtiles4
+lda.w #bgtiles4 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+lda.w #:bgpalette4_end
+lda.w #bgpalette4_end + 0
+sta.b tcc__r1
+lda.w #:bgpalette4
+lda.w #bgpalette4 + 0
+sta.b tcc__r2
+sec
+lda.b tcc__r1
+sbc.b tcc__r2
+sta.b tcc__r1
+pea.w 16384
+pea.w 16
+pei (tcc__r1)
+pei (tcc__r0)
+sep #$20
+lda #0
+pha
+rep #$20
+pea.w :bgpalette4
+pea.w bgpalette4 + 0
+pea.w :bgtiles4
+pea.w bgtiles4 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitTileSet
+tsa
+clc
+adc #18
+tas
+lda.w #:bgmap4_end
+lda.w #bgmap4_end + 0
+sta.b tcc__r0
+lda.w #:bgmap4
+lda.w #bgmap4 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+pea.w 4096
+sep #$20
+lda #3
+pha
+rep #$20
+pei (tcc__r0)
+pea.w :bgmap4
+pea.w bgmap4 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitMapSet
+tsa
+clc
+adc #10
+tas
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+jsr.l setScreenOn
+__local_115:
+__local_104:
+__local_107:
+__local_110:
+__local_113:
+__local_116:
+__local_97:
+__local_117:
+.ifgr __mudarBackground_locals 0
+tsa
+clc
+adc #__mudarBackground_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".processortext_0xf" SUPERFREE
+
+processor:
+.ifgr __processor_locals 0
+tsa
+sec
+sbc #__processor_locals
+tas
+.endif
+jsr.l printHiScore
+jsr.l comecarJogo
+jsr.l gameOver
+jsr.l printScoreGameOver
+jsr.l atualizarHiScore
+jsr.l printDadosFase
+jsr.l atualizarLevel
+jsr.l atualizarScore
+jsr.l carregarTijolo
+jsr.l atualizarTijolo
+jsr.l EhParaCarregarPink
+jsr.l carregarPink
+jsr.l atualizarPink
+jsr.l mudarBackground
+__local_118:
+.ifgr __processor_locals 0
+tsa
+clc
+adc #__processor_locals
+tas
+.endif
+rtl
+.ENDS
+
+.SECTION ".maintext_0x10" SUPERFREE
+
+main:
+.ifgr __main_locals 0
+tsa
+sec
+sbc #__main_locals
+tas
+.endif
+jsr.l spcBoot
+sep #$20
+lda #195
+pha
+rep #$20
+jsr.l spcAllocateSoundRegion
+tsa
+clc
+adc #1
+tas
+pea.w :SOUNDBANK__
+pea.w SOUNDBANK__ + 0
+jsr.l spcSetBank
+tsa
+clc
+adc #4
+tas
+pea.w 0
+jsr.l spcLoad
+pla
+sep #$20
+lda #0
+pha
+rep #$20
+jsr.l spcPlay
+tsa
+clc
+adc #1
+tas
+jsr.l WaitForVBlank
+jsr.l WaitForVBlank
+lda.w #:losebrrsound_end
+lda.w #losebrrsound_end + 0
+sta.b tcc__r0
+lda.w #:losebrrsound
+lda.w #losebrrsound + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+stz.b tcc__r1h
+tsa
+clc
+adc #(-8 + __main_locals + 1)
+pei (tcc__r1h)
+pha
+pea.w :losebrrsound
+pea.w losebrrsound + 0
+pei (tcc__r0)
+pea.w (2 * 256 + 15)
+sep #$20
+lda #15
+pha
+rep #$20
+jsr.l spcSetSoundEntry
+tsa
+clc
+adc #13
+tas
+lda.w #:movebrrsound_end
+lda.w #movebrrsound_end + 0
+sta.b tcc__r0
+lda.w #:movebrrsound
+lda.w #movebrrsound + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+stz.b tcc__r1h
+tsa
+clc
+adc #(-16 + __main_locals + 1)
+pei (tcc__r1h)
+pha
+pea.w :movebrrsound
+pea.w movebrrsound + 0
+pei (tcc__r0)
+pea.w (5 * 256 + 15)
+sep #$20
+lda #15
+pha
+rep #$20
+jsr.l spcSetSoundEntry
+tsa
+clc
+adc #13
+tas
+lda.w #:javasnes_patterns_end
+sta.b tcc__r0h
+lda.w #javasnes_patterns_end + 0
+sta.b tcc__r0
+lda.w #:javasnes_patterns
+lda.w #javasnes_patterns + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+lda.w #:javasnes_palette_end
+lda.w #javasnes_palette_end + 0
+sta.b tcc__r1
+lda.w #:javasnes_palette
+lda.w #javasnes_palette + 0
+sta.b tcc__r2
+sec
+lda.b tcc__r1
+sbc.b tcc__r2
+sta.b tcc__r1
+pea.w 16384
+pea.w 16
+pei (tcc__r1)
+pei (tcc__r0)
+sep #$20
+lda #0
+pha
+rep #$20
+pea.w :javasnes_palette
+pea.w javasnes_palette + 0
+pea.w :javasnes_patterns
+pea.w javasnes_patterns + 0
+sep #$20
+lda #0
+pha
+rep #$20
+jsr.l bgInitTileSet
+tsa
+clc
+adc #18
+tas
+lda.w #:javasnes_map_end
+lda.w #javasnes_map_end + 0
+sta.b tcc__r0
+lda.w #:javasnes_map
+lda.w #javasnes_map + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+pea.w 0
+sep #$20
+lda #0
+pha
+rep #$20
+pei (tcc__r0)
+pea.w :javasnes_map
+pea.w javasnes_map + 0
+sep #$20
+lda #0
+pha
+rep #$20
+jsr.l bgInitMapSet
+tsa
+clc
+adc #10
+tas
+pea.w (0 * 256 + 1)
+sep #$20
+rep #$20
+jsr.l setMode
+pla
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgSetDisable
+tsa
+clc
+adc #1
+tas
+sep #$20
+lda #2
+pha
+rep #$20
+jsr.l bgSetDisable
+tsa
+clc
+adc #1
+tas
+jsr.l setScreenOn
+pea.w 4
+pea.w :HiScore
+pea.w HiScore + 0
+jsr.l consoleLoadSram
+tsa
+clc
+adc #6
+tas
+pea.w 0
+pea.w 1000
+lda.l HiScore + 0
+sta.b tcc__r0
+lda.l HiScore + 2
+sta.b tcc__r1
+pha
+pei (tcc__r0)
+jsr.l tcc__umoddi3
+tsa
+clc
+adc #8
+tas
+stz.b tcc__r2
+lda.w #0
+sta.b tcc__r3
+ldx #1
+lda.b tcc__r1
+sec
+sbc.b tcc__r3
+tay
+beq +
+dex
++
+stx.b tcc__r5
+txa
+bne +
+brl __local_119
++
+ldx #1
+lda.b tcc__r0
+sec
+sbc.b tcc__r2
+tay
+beq +
+dex
++
+stx.b tcc__r5
+txa
+bne +
+__local_119:
+brl __local_120
++
+lda #1
+bra +
+__local_120:
+lda #0
++
+sta.b tcc__r0
+lda.b tcc__r0 ; DON'T OPTIMIZE
+bne +
+brl __local_121
++
+bra __local_122
+__local_121:
+lda.w #10000
+sta.b tcc__r0
+lda.w #0
+sta.b tcc__r1
+bra __local_123
+__local_122:
+lda.l HiScore + 0
+sta.b tcc__r0
+lda.l HiScore + 2
+sta.b tcc__r1
+__local_123:
+lda.b tcc__r0
+sta.l HiScore + 0
+lda.b tcc__r1
+sta.l HiScore + 2
+jsr.l WaitForVBlank
+lda.w #0
+sta.b tcc__r0
+sep #$20
+sta -17 + __main_locals + 1,s
+rep #$20
+__local_126:
+lda.w #0
+sep #$20
+lda -17 + __main_locals + 1,s
+rep #$20
+sta.b tcc__r0
+sec
+sbc.w #120
+bvc +
+eor #$8000
++
+bmi +
+brl __local_124
++
+bra __local_125
+__local_127:
+lda.w #0
+sep #$20
+lda -17 + __main_locals + 1,s
+rep #$20
+sta.b tcc__r0
+sta.b tcc__r1
+lda.b tcc__r0h
+sta.b tcc__r1h
+inc.b tcc__r0
+sep #$20
+lda.b tcc__r0
+sta -17 + __main_locals + 1,s
+rep #$20
+bra __local_126
+__local_125:
+jsr.l WaitForVBlank
+bra __local_127
+__local_124:
+jsr.l dmaClearVram
+jsr.l dmaClearVram
+pea.w 12288
+jsr.l consoleSetTextGfxPtr
+pla
+pea.w 26624
+jsr.l consoleSetTextMapPtr
+pla
+pea.w 256
+jsr.l consoleSetTextOffset
+pla
+pea.w :palfont
+pea.w palfont + 0
+pea.w :tilesfont
+pea.w tilesfont + 0
+pea.w (32 * 256 + 1)
+sep #$20
+rep #$20
+jsr.l consoleInitText
+tsa
+clc
+adc #10
+tas
+jsr.l setScreenOff
+lda.w #:bgtiles4_end
+sta.b tcc__r0h
+lda.w #bgtiles4_end + 0
+sta.b tcc__r0
+lda.w #:bgtiles4
+lda.w #bgtiles4 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+lda.w #:bgpalette4_end
+lda.w #bgpalette4_end + 0
+sta.b tcc__r1
+lda.w #:bgpalette4
+lda.w #bgpalette4 + 0
+sta.b tcc__r2
+sec
+lda.b tcc__r1
+sbc.b tcc__r2
+sta.b tcc__r1
+pea.w 16384
+pea.w 16
+pei (tcc__r1)
+pei (tcc__r0)
+sep #$20
+lda #0
+pha
+rep #$20
+pea.w :bgpalette4
+pea.w bgpalette4 + 0
+pea.w :bgtiles4
+pea.w bgtiles4 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitTileSet
+tsa
+clc
+adc #18
+tas
+lda.w #:bgmap4_end
+lda.w #bgmap4_end + 0
+sta.b tcc__r0
+lda.w #:bgmap4
+lda.w #bgmap4 + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+pea.w 4096
+sep #$20
+lda #3
+pha
+rep #$20
+pei (tcc__r0)
+pea.w :bgmap4
+pea.w bgmap4 + 0
+sep #$20
+lda #1
+pha
+rep #$20
+jsr.l bgInitMapSet
+tsa
+clc
+adc #10
+tas
+pea.w 8192
+sep #$20
+lda #0
+pha
+rep #$20
+jsr.l bgSetGfxPtr
+tsa
+clc
+adc #3
+tas
+sep #$20
+lda #0
+pha
+rep #$20
+pea.w 26624
+sep #$20
+lda #0
+pha
+rep #$20
+jsr.l bgSetMapPtr
+tsa
+clc
+adc #4
+tas
+pea.w (0 * 256 + 1)
+sep #$20
+rep #$20
+jsr.l setMode
+pla
+sep #$20
+lda #2
+pha
+rep #$20
+jsr.l bgSetDisable
+tsa
+clc
+adc #1
+tas
+jsr.l setScreenOn
+jsr.l WaitForVBlank
+lda.w #:tilespink_end
+sta.b tcc__r0h
+lda.w #tilespink_end + 0
+sta.b tcc__r0
+lda.w #:tilespink
+lda.w #tilespink + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+lda.w #:palpink_end
+lda.w #palpink_end + 0
+sta.b tcc__r1
+lda.w #:palpink
+lda.w #palpink + 0
+sta.b tcc__r2
+sec
+lda.b tcc__r1
+sbc.b tcc__r2
+sta.b tcc__r1
+sep #$20
+lda #160
+pha
+rep #$20
+pea.w 640
+sep #$20
+lda #2
+pha
+rep #$20
+pei (tcc__r1)
+pea.w :palpink
+pea.w palpink + 0
+pei (tcc__r0)
+pea.w :tilespink
+pea.w tilespink + 0
+jsr.l oamInitGfxSet
+tsa
+clc
+adc #16
+tas
+pea.w (1 * 256 + 0)
+sep #$20
+rep #$20
+pea.w 0
+jsr.l oamSetEx
+tsa
+clc
+adc #4
+tas
+lda.w #:tilestijolos_end
+sta.b tcc__r0h
+lda.w #tilestijolos_end + 0
+sta.b tcc__r0
+lda.w #:tilestijolos
+lda.w #tilestijolos + 0
+sta.b tcc__r1
+sec
+lda.b tcc__r0
+sbc.b tcc__r1
+sta.b tcc__r0
+lda.w #:paltijolos_end
+lda.w #paltijolos_end + 0
+sta.b tcc__r1
+lda.w #:paltijolos
+lda.w #paltijolos + 0
+sta.b tcc__r2
+sec
+lda.b tcc__r1
+sbc.b tcc__r2
+sta.b tcc__r1
+sep #$20
+lda #0
+pha
+rep #$20
+pea.w 704
+sep #$20
+lda #3
+pha
+rep #$20
+pei (tcc__r1)
+pea.w :paltijolos
+pea.w paltijolos + 0
+pei (tcc__r0)
+pea.w :tilestijolos
+pea.w tilestijolos + 0
+jsr.l oamInitGfxSet
+tsa
+clc
+adc #16
+tas
+pea.w (1 * 256 + 0)
+sep #$20
+rep #$20
+pea.w 1
+jsr.l oamSetEx
+tsa
+clc
+adc #4
+tas
+__local_128:
+jsr.l processor
+jsr.l WaitForVBlank
+bra __local_128
+lda.w #0
+sta.b tcc__r0
+__local_129:
+.ifgr __main_locals 0
+tsa
+clc
+adc #__main_locals
+tas
+.endif
+rtl
+.ENDS
+.RAMSECTION "ram{WLA_FILENAME}.data" APPENDTO "globram.data"
+
+mudarBG dsb 2
+pad0 dsb 2
+atualBG dsb 4
+HiScore dsb 4
+Score dsb 4
+yTijolo dsb 2
+xTijolo dsb 2
+xPink dsb 1
+qtdVidas dsb 1
+colidiuTijolo dsb 1
+ehParaCarregarPink dsb 1
+ehParaCarregarTijolo dsb 1
+animLeft dsb 4
+animRight dsb 4
+animFrame dsb 1
+noChao dsb 1
+
+.ENDS
+
+.SECTION "{WLA_FILENAME}.data" APPENDTO "glob.data"
+
+.db $0,$0
+.db $0,$0
+.db $4,$0,$0,$0
+.db $10,$27,$0,$0
+.db $0,$0,$0,$0
+.db $ff,$ff
+.db $ff,$ff
+.db $0
+.db $3
+.db $0
+.db $0
+.db $0
+.db $0,$2,$0,$4
+.db $6,$8,$6,$a
+.db $0
+.db $0
+.ENDS
+
+.SECTION ".rodata" SUPERFREE
+
+tccs_{WLA_FILENAME}_L.{WLA_FILENAME}8: .db $48,$69,$67,$68,$53,$63,$6f,$72,$65,$3a,$20,$25,$64,$0
+tccs_{WLA_FILENAME}_L.{WLA_FILENAME}9: .db $20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$0
+tccs_{WLA_FILENAME}_L.{WLA_FILENAME}10: .db $53,$63,$6f,$72,$65,$3a,$20,$25,$64,$0
+tccs_{WLA_FILENAME}_L.{WLA_FILENAME}11: .db $48,$69,$3a,$20,$25,$64,$0
+tccs_{WLA_FILENAME}_L.{WLA_FILENAME}12: .db $53,$63,$3a,$20,$25,$64,$0
+tccs_{WLA_FILENAME}_L.{WLA_FILENAME}13: .db $4c,$76,$3a,$20,$25,$64,$0
+tccs_{WLA_FILENAME}_L.{WLA_FILENAME}14: .db $4c,$66,$3a,$20,$25,$64,$0
+.ENDS
+
+.RAMSECTION ".bss" BANK $7e SLOT 2
+.ENDS

@@ -12,6 +12,7 @@ public class Compilador {
 
         HashMap<String, String> memMapConfig = new HashMap<>();
         memMapConfig.put("name", "Pink Wall - The Game ");
+        
         MemoryMapping memMap = new MemoryMapping(memMapConfig);
         
         return memMap;
@@ -71,7 +72,6 @@ public class Compilador {
             "$(GFXCONV) -s 8 -u 16 -o 16 -p -m -t bmp -i $<"
         );
 
-
         Make.MakeRule bitmaps = new Make.MakeRule(
             "bitmaps",
             "fonte.pic BG_1.pic BG_2.pic BG_3.pic BG_4.pic BG_5.pic sprites.pic tijolo.pic",
@@ -91,11 +91,37 @@ public class Compilador {
         makefile.addRule(bitmaps);
         makefile.addPhonyTarget("bitmaps");
 
+        Make.MakeRule move = new Make.MakeRule(
+            "move.brr",
+            "move.wav",
+            "$(BRCONV) -e $< $@"
+        );
+
+        Make.MakeRule lose = new Make.MakeRule(
+            "lose.brr",
+            "lose.wav",
+            "$(BRCONV) -e $< $@"
+        );
+
+        Make.MakeRule musics = new Make.MakeRule(
+            "musics",
+            "move.brr lose.brr"
+        );
+
+        makefile.addRule(move);
+        makefile.addRule(lose);
+
+        makefile.addRule(musics);
+        makefile.addPhonyTarget("musics");
+
         makefile.getRule("all").setPrerequisites(
-            makefile.getRule("all").getPrerequisites() + " bitmaps $(ROMNAME).sfc"
+            makefile.getRule("all").getPrerequisites() + " musics bitmaps $(ROMNAME).sfc"
         );
 
         makefile.setRomName("PinkWall");
+        makefile.addHeaderLine("AUDIOFILES := pollen8.it");
+        makefile.addHeaderLine("export SOUNDBANK := soundbank");
+        makefile.addVariable("SMCONVFLAGS", "-s -o $(SOUNDBANK) -V -b 5");
 
         return makefile;
 
@@ -129,6 +155,14 @@ public class Compilador {
         app.addDataToCopy(bg3.toString());
         app.addDataToCopy(bg4.toString());
         app.addDataToCopy(bg5.toString());
+
+        Path loseWave = pastaJAR.resolve("data").resolve("lose.wav");
+        Path moveWave = pastaJAR.resolve("data").resolve("move.wav");
+        Path pollen8 = pastaJAR.resolve("data").resolve("pollen8.it");
+
+        app.addDataToCopy(loseWave.toString());
+        app.addDataToCopy(moveWave.toString());
+        app.addDataToCopy(pollen8.toString());
 
         Path pastaROM = pastaJAR.resolve("output");
         app.setDestination(pastaROM.toString());

@@ -125,3 +125,15 @@ bgmap4_end:
 
 
 .ends
+
+.section ".rodata8" superfree
+losebrrsound:
+.incbin "lose.brr"
+losebrrsound_end:
+
+movebrrsound:
+.incbin "move.brr"
+movebrrsound_end:
+
+
+.ends

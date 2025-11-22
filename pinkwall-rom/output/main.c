@@ -6,114 +6,874 @@ extern char javasnes_map, javasnes_map_end;
 extern char javasnes_palette, javasnes_palette_end;
 // end auto-generated global instructions
 
-extern char bgmap0, bgmap2, bgpalette4_end, paltijolos, bgmap1, bgtiles3_end, bgmap4, bgmap3, bgmap0_end, tilesfont, tilestijolos, bgtiles4_end, palfont, bgtiles1, bgtiles0, bgtiles3, paltijolos_end, bgtiles2, bgpalette3_end, bgmap4_end, palpink_end, bgtiles4, tilespink, tilestijolos_end, bgtiles1_end, bgpalette2_end, bgmap3_end, bgpalette4, bgpalette3, bgpalette2, bgtiles0_end, bgpalette1, bgpalette0, tilespink_end, bgtiles2_end, bgpalette0_end, bgmap1_end, palpink, bgpalette1_end, bgmap2_end;
+extern char bgmap0, bgmap2, bgpalette4_end, paltijolos, bgmap1, bgtiles3_end, bgmap4, bgmap3, bgmap0_end, tilesfont, tilestijolos, bgtiles4_end, palfont, movebrrsound, bgtiles1, bgtiles0, bgtiles3, paltijolos_end, bgtiles2, bgpalette3_end, bgmap4_end, palpink_end, bgtiles4, losebrrsound_end, tilespink, tilestijolos_end, losebrrsound, bgtiles1_end, bgpalette2_end, bgmap3_end, bgpalette4, bgpalette3, bgpalette2, bgtiles0_end, bgpalette1, bgpalette0, movebrrsound_end, SOUNDBANK__, tilespink_end, bgtiles2_end, bgpalette0_end, bgmap1_end, palpink, bgpalette1_end, bgmap2_end;
 u8 mudarBG = 0;
 u16 pad0 = 0;
 u8 atualBG = 4;
 u32 HiScore = 10000;
+u32 Score = 0;
+s16 yTijolo = -1;
+s16 xTijolo = -1;
+u8 xPink = 0;
+u8 qtdVidas = 3;
+u8 colidiuTijolo = 0;
+u8 ehParaCarregarPink = 0;
+u8 ehParaCarregarTijolo = 0;
+char animLeft[4] = {0, 2, 0, 4};
+char animRight[4] = {6, 8, 6, 10};
+u8 animFrame = 0;
+u8 noChao = 0;
+#include "soundbank.h"
 
-void printHiScore(void) {
-	if ((atualBG == 4)) {
-			consoleDrawText(5, 25, "Hi Score: %d", (int) HiScore);
+void printHiScore(void)
+{
+	if ((atualBG == 4))
+	{
+		consoleDrawText(2, 26, "HighScore: %d", (int)HiScore);
 	}
 	return;
 }
 
-void limparPrintHiScore(void) {
-	consoleDrawText(4, 25, "                          ");
+void limparPrintHiScore(void)
+{
+	consoleDrawText(1, 26, "                          ");
 	return;
 }
 
-void ehParaMudarBackground(void) {
-	pad0 = padsCurrent(0);
-	mudarBG = (pad0 & KEY_A);
+void comecarJogo(void)
+{
+	spcProcess();
+	if (((padsCurrent(0) & KEY_START) && (atualBG == 4)))
+	{
+		mudarBG = 1;
+	}
 	return;
 }
 
-void mudarBackground(void) {
-	if ((mudarBG & mudarBG)) {
-			atualBG = (atualBG >= 4) ? 0 : (atualBG + 1);
-			switch (atualBG) {
-				case 0:
-					limparPrintHiScore();
-					setScreenOff();
-					WaitForVBlank();
-					bgInitTileSet(1, &bgtiles0, &bgpalette0, 0, (&bgtiles0_end - &bgtiles0), (&bgpalette0_end - &bgpalette0), BG_16COLORS, 0x4000);
-					bgInitMapSet(1, &bgmap0, (&bgmap0_end - &bgmap0), SC_64x64, 0x1000);
-					WaitForVBlank();
-					setScreenOn();
-					break;
-				case 1:
-					limparPrintHiScore();
-					setScreenOff();
-					WaitForVBlank();
-					bgInitTileSet(1, &bgtiles1, &bgpalette1, 0, (&bgtiles1_end - &bgtiles1), (&bgpalette1_end - &bgpalette1), BG_16COLORS, 0x4000);
-					bgInitMapSet(1, &bgmap1, (&bgmap1_end - &bgmap1), SC_64x64, 0x1000);
-					WaitForVBlank();
-					setScreenOn();
-					break;
-				case 2:
-					limparPrintHiScore();
-					setScreenOff();
-					WaitForVBlank();
-					bgInitTileSet(1, &bgtiles2, &bgpalette2, 0, (&bgtiles2_end - &bgtiles2), (&bgpalette2_end - &bgpalette2), BG_16COLORS, 0x4000);
-					bgInitMapSet(1, &bgmap2, (&bgmap2_end - &bgmap2), SC_64x64, 0x1000);
-					WaitForVBlank();
-					setScreenOn();
-					break;
-				case 3:
-					limparPrintHiScore();
-					setScreenOff();
-					WaitForVBlank();
-					bgInitTileSet(1, &bgtiles3, &bgpalette3, 0, (&bgtiles3_end - &bgtiles3), (&bgpalette3_end - &bgpalette3), BG_16COLORS, 0x4000);
-					bgInitMapSet(1, &bgmap3, (&bgmap3_end - &bgmap3), SC_64x64, 0x1000);
-					WaitForVBlank();
-					setScreenOn();
-					break;
-				case 4:
-					limparPrintHiScore();
-					setScreenOff();
-					WaitForVBlank();
-					bgInitTileSet(1, &bgtiles4, &bgpalette4, 0, (&bgtiles4_end - &bgtiles4), (&bgpalette4_end - &bgpalette4), BG_16COLORS, 0x4000);
-					bgInitMapSet(1, &bgmap4, (&bgmap4_end - &bgmap4), SC_64x64, 0x1000);
-					WaitForVBlank();
-					setScreenOn();
-					break;
+void gameOver(void)
+{
+	if ((atualBG == 3))
+	{
+		spcPlaySound(0);
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		WaitForVBlank();
+		mudarBG = 1;
+	}
+	return;
+}
+
+void printScoreGameOver(void)
+{
+	if ((atualBG == 3))
+	{
+		consoleDrawText(2, 26, "Score: %d", (int)Score);
+	}
+	spcPlaySound(0);
+	return;
+}
+
+void atualizarHiScore(void)
+{
+	if ((Score >= HiScore))
+	{
+		HiScore = Score;
+		consoleCopySram((u8 *)&Score, 4);
+	}
+	return;
+}
+
+void printDadosFase(void)
+{
+	if ((atualBG <= 2))
+	{
+		consoleDrawText(20, 4, "Hi: %d", (int)HiScore);
+		consoleDrawText(20, 6, "Sc: %d", (int)Score);
+		consoleDrawText(20, 8, "Lv: %d", (int)(4 - qtdVidas));
+		consoleDrawText(20, 10, "Lf: %d", (int)qtdVidas);
+	}
+	return;
+}
+
+void atualizarLevel(void)
+{
+	mudarBG = (yTijolo > 215) ? 1 : 0;
+	qtdVidas -= (yTijolo > 215) ? 1 : qtdVidas;
+	return;
+}
+
+void atualizarScore(void)
+{
+	Score += (((xTijolo < (xPink + 32)) && ((xTijolo + 8) > xPink)) && ((yTijolo < (192 + 32)) && ((yTijolo + 8) > 192))) ? 1000 : Score;
+	colidiuTijolo = (((xTijolo < (xPink + 32)) && ((xTijolo + 8) > xPink)) && ((yTijolo < (192 + 32)) && ((yTijolo + 8) > 192))) ? 1 : 0;
+	return;
+}
+
+void carregarTijolo(void)
+{
+	yTijolo = -16;
+	xTijolo = rand() & 200;
+	oamSetEx(1, OBJ_SMALL, (atualBG < 3) ? OBJ_SHOW : OBJ_HIDE);
+	return;
+}
+
+void atualizarTijolo(void)
+{
+	yTijolo = ((snes_vblank_count && 3) == 0) ? (yTijolo + 1) : yTijolo;
+	yTijolo = ((yTijolo > 215) || colidiuTijolo) ? -16 : yTijolo;
+	xTijolo = ((yTijolo > 215) || colidiuTijolo) ? rand() & 200 : xTijolo;
+	oamSetEx(1, OBJ_SMALL, (atualBG < 3) ? OBJ_SHOW : OBJ_HIDE);
+	return;
+}
+
+void EhParaCarregarPink(void)
+{
+	ehParaCarregarPink = (atualBG == 0) ? 1 : 0;
+	return;
+}
+
+void carregarPink(void)
+{
+	if ((atualBG == 1))
+	{
+		oamSet(0, 100, 192, 3, 0, 0, animFrame, 2);
+		oamSetEx(0, OBJ_SMALL, OBJ_SHOW);
+		oamSetVisible(0, OBJ_SHOW);
+	}
+	else if (((atualBG == 3) || (atualBG == 4)))
+	{
+		oamSet(0, 100, 192, 3, 0, 0, animFrame, 2);
+		oamSetEx(0, OBJ_SMALL, OBJ_HIDE);
+		oamSetVisible(0, OBJ_HIDE);
+	}
+	return;
+}
+
+void atualizarPink(void)
+{
+	xPink = (padsCurrent(0) & KEY_LEFT) ? (xPink + -1) : xPink;
+	xPink = (padsCurrent(0) & KEY_RIGHT) ? (xPink + 1) : xPink;
+	xPink = (xPink < 0) ? 0 : xPink;
+	xPink = (xPink > 192) ? 192 : xPink;
+	animFrame = ((padsCurrent(0) & KEY_LEFT) || (padsCurrent(0) & KEY_RIGHT)) ? (animFrame + 1) : animFrame;
+	animFrame = (animFrame >= 4) ? 0 : animFrame;
+	oamSetEx(0, OBJ_SMALL, (padsCurrent(0) & KEY_LEFT) ? 0 : OBJ_SHOW);
+	oamSet(0, xPink, 192, 3, (padsCurrent(0) & KEY_LEFT) ? animLeft[animFrame] : animRight[animFrame], 0, animFrame, 2);
+	spcPlaySound(1);
+	return;
+}
+
+void mudarBackground(void)
+{
+	if ((mudarBG & mudarBG))
+	{
+		atualBG = (atualBG >= 4) ? 0 : (atualBG + 1);
+		switch (atualBG)
+		{
+		case 0:
+			limparPrintHiScore();
+			setScreenOff();
+			ehParaCarregarTijolo = 1;
+			WaitForVBlank();
+			bgInitTileSet(1, &bgtiles0, &bgpalette0, 0, (&bgtiles0_end - &bgtiles0), (&bgpalette0_end - &bgpalette0), BG_16COLORS, 0x4000);
+			bgInitMapSet(1, &bgmap0, (&bgmap0_end - &bgmap0), SC_64x64, 0x1000);
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			setScreenOn();
+			break;
+		case 1:
+			limparPrintHiScore();
+			setScreenOff();
+			ehParaCarregarTijolo = 1;
+			WaitForVBlank();
+			bgInitTileSet(1, &bgtiles1, &bgpalette1, 0, (&bgtiles1_end - &bgtiles1), (&bgpalette1_end - &bgpalette1), BG_16COLORS, 0x4000);
+			bgInitMapSet(1, &bgmap1, (&bgmap1_end - &bgmap1), SC_64x64, 0x1000);
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			setScreenOn();
+			break;
+		case 2:
+			limparPrintHiScore();
+			setScreenOff();
+			ehParaCarregarTijolo = 1;
+			WaitForVBlank();
+			bgInitTileSet(1, &bgtiles2, &bgpalette2, 0, (&bgtiles2_end - &bgtiles2), (&bgpalette2_end - &bgpalette2), BG_16COLORS, 0x4000);
+			bgInitMapSet(1, &bgmap2, (&bgmap2_end - &bgmap2), SC_64x64, 0x1000);
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			setScreenOn();
+			break;
+		case 3:
+			limparPrintHiScore();
+			setScreenOff();
+			ehParaCarregarPink = 0;
+			ehParaCarregarTijolo = 0;
+			WaitForVBlank();
+			bgInitTileSet(1, &bgtiles3, &bgpalette3, 0, (&bgtiles3_end - &bgtiles3), (&bgpalette3_end - &bgpalette3), BG_16COLORS, 0x4000);
+			bgInitMapSet(1, &bgmap3, (&bgmap3_end - &bgmap3), SC_64x64, 0x1000);
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			setScreenOn();
+			break;
+		case 4:
+			limparPrintHiScore();
+			setScreenOff();
+			ehParaCarregarPink = 0;
+			ehParaCarregarTijolo = 0;
+			WaitForVBlank();
+			bgInitTileSet(1, &bgtiles4, &bgpalette4, 0, (&bgtiles4_end - &bgtiles4), (&bgpalette4_end - &bgpalette4), BG_16COLORS, 0x4000);
+			bgInitMapSet(1, &bgmap4, (&bgmap4_end - &bgmap4), SC_64x64, 0x1000);
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			WaitForVBlank();
+			setScreenOn();
+			break;
 		}
 	}
 	return;
 }
 
-void processor(void) {
+void processor(void)
+{
 	printHiScore();
-	ehParaMudarBackground();
+	comecarJogo();
+	gameOver();
+	printScoreGameOver();
+	atualizarHiScore();
+	printDadosFase();
+	atualizarLevel();
+	atualizarScore();
+	carregarTijolo();
+	atualizarTijolo();
+	EhParaCarregarPink();
+	carregarPink();
+	atualizarPink();
 	mudarBackground();
 	return;
 }
 
-int main(void) {
-	
+int main(void)
+{
+
 	spcBoot();
-	
-	
+
+	spcAllocateSoundRegion(195);
+	spcSetBank(&SOUNDBANK__);
+	spcLoad(MOD_POLLEN8);
+	spcPlay(0);
+	brrsamples losesound;
+	WaitForVBlank();
+	brrsamples movesound;
+	WaitForVBlank();
+	spcSetSoundEntry(15, 15, 2, (&losebrrsound_end - &losebrrsound), &losebrrsound, &losesound);
+	spcSetSoundEntry(15, 15, 5, (&movebrrsound_end - &movebrrsound), &movebrrsound, &movesound);
+
 	bgInitTileSet(0, &javasnes_patterns, &javasnes_palette, 0, (&javasnes_patterns_end - &javasnes_patterns), (&javasnes_palette_end - &javasnes_palette), BG_16COLORS, 0x4000);
 	bgInitMapSet(0, &javasnes_map, (&javasnes_map_end - &javasnes_map), SC_32x32, 0x0000);
-	
-	
+
 	setMode(BG_MODE1, 0);
 	bgSetDisable(1);
 	bgSetDisable(2);
 	setScreenOn();
-	
-	
+
+	consoleLoadSram((u8 *)&HiScore, 4);
+	HiScore = (HiScore % 1000 == 0) ? HiScore : (10000);
+
 	WaitForVBlank();
-	
+
 	u8 i;
-	for (i = 0; i < 120; i++) {
+	for (i = 0; i < 120; i++)
+	{
 		WaitForVBlank();
 	}
 	dmaClearVram();
-	
+
 	dmaClearVram();
 	consoleSetTextGfxPtr(0x3000);
 	consoleSetTextMapPtr(0x6800);
@@ -132,21 +892,8 @@ int main(void) {
 	oamSetEx(0, OBJ_SMALL, OBJ_HIDE);
 	oamInitGfxSet(&tilestijolos, (&tilestijolos_end - &tilestijolos), &paltijolos, (&paltijolos_end - &paltijolos), 3, 704, OBJ_SIZE8_L16);
 	oamSetEx(1, OBJ_SMALL, OBJ_HIDE);
-	oamInitGfxSet(&tilestijolos, (&tilestijolos_end - &tilestijolos), &paltijolos, (&paltijolos_end - &paltijolos), 3, 705, OBJ_SIZE8_L16);
-	oamSetEx(2, OBJ_SMALL, OBJ_HIDE);
-	oamInitGfxSet(&tilestijolos, (&tilestijolos_end - &tilestijolos), &paltijolos, (&paltijolos_end - &paltijolos), 3, 706, OBJ_SIZE8_L16);
-	oamSetEx(3, OBJ_SMALL, OBJ_HIDE);
-	oamInitGfxSet(&tilestijolos, (&tilestijolos_end - &tilestijolos), &paltijolos, (&paltijolos_end - &paltijolos), 3, 707, OBJ_SIZE8_L16);
-	oamSetEx(4, OBJ_SMALL, OBJ_HIDE);
-	oamInitGfxSet(&tilestijolos, (&tilestijolos_end - &tilestijolos), &paltijolos, (&paltijolos_end - &paltijolos), 3, 708, OBJ_SIZE8_L16);
-	oamSetEx(5, OBJ_SMALL, OBJ_HIDE);
-	oamInitGfxSet(&tilestijolos, (&tilestijolos_end - &tilestijolos), &paltijolos, (&paltijolos_end - &paltijolos), 3, 709, OBJ_SIZE8_L16);
-	oamSetEx(6, OBJ_SMALL, OBJ_HIDE);
-	oamInitGfxSet(&tilestijolos, (&tilestijolos_end - &tilestijolos), &paltijolos, (&paltijolos_end - &paltijolos), 3, 710, OBJ_SIZE8_L16);
-	oamSetEx(7, OBJ_SMALL, OBJ_HIDE);
-	oamInitGfxSet(&tilestijolos, (&tilestijolos_end - &tilestijolos), &paltijolos, (&paltijolos_end - &paltijolos), 3, 711, OBJ_SIZE8_L16);
-	oamSetEx(8, OBJ_SMALL, OBJ_HIDE);
-	while (1) {
+	while (1)
+	{
 		processor();
 		WaitForVBlank();
 	}

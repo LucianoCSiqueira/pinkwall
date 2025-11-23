@@ -14,20 +14,19 @@ u32 HiScore = 10000;
 u32 Score = 0;
 s16 yTijolo = -1;
 s16 xTijolo = -1;
-u8 xPink = 0;
+s16 xPink = 0;
 u8 qtdVidas = 3;
 u8 colidiuTijolo = 0;
 u8 ehParaCarregarPink = 0;
 u8 ehParaCarregarTijolo = 0;
-char animLeft[4] = {0, 2, 0, 4};
-char animRight[4] = {6, 8, 6, 10};
+char animLeft[4] = {0, 4, 0, 8};
 u8 animFrame = 0;
 u8 noChao = 0;
 #include "soundbank.h"
 
 void printHiScore(void) {
 	if ((atualBG == 4)) {
-			consoleDrawText(2, 26, "HighScore: %d", (int) HiScore);
+			consoleDrawText(2, 26, "HighScore: %d", (long long int) HiScore);
 	}
 	return;
 }
@@ -555,7 +554,7 @@ void gameOver(void) {
 
 void printScoreGameOver(void) {
 	if ((atualBG == 3)) {
-			consoleDrawText(2, 26, "Score: %d", (int) Score);
+			consoleDrawText(2, 26, "Score: %d", (long long int) Score);
 	}
 	spcPlaySound(0);
 	return;
@@ -573,9 +572,9 @@ void printDadosFase(void) {
 	if ((atualBG <= 2)) {
 			consoleDrawText(26, 3, "High");
 			consoleDrawText(26, 4, "Score:");
-			consoleDrawText(26, 6, "%06d", (int) HiScore);
+			consoleDrawText(26, 6, "%06d", (long long int) HiScore);
 			consoleDrawText(26, 10, "Score:");
-			consoleDrawText(26, 12, "%06d", (int) Score);
+			consoleDrawText(26, 12, "%06d", (long long int) Score);
 			consoleDrawText(26, 16, "Level:");
 			consoleDrawText(26, 18, "%d", (int) (4 - qtdVidas));
 			consoleDrawText(26, 22, "Lifes:");
@@ -613,32 +612,19 @@ void atualizarTijolo(void) {
 }
 
 void EhParaCarregarPink(void) {
-	ehParaCarregarPink = (atualBG == 0) ? 1 : 0;
-	return;
-}
-
-void carregarPink(void) {
-	if ((atualBG == 1)) {
-			oamSet(0, 100, 192, 3, 0, 0, animFrame, 2);
-			oamSetEx(0, OBJ_SMALL, OBJ_SHOW);
-			oamSetVisible(0, OBJ_SHOW);
-	} else if (((atualBG == 3) || (atualBG == 4))) {
-			oamSet(0, 100, 192, 3, 0, 0, animFrame, 2);
-			oamSetEx(0, OBJ_SMALL, OBJ_HIDE);
-			oamSetVisible(0, OBJ_HIDE);
-	}
+	ehParaCarregarPink = (atualBG <= 2) ? 1 : 0;
 	return;
 }
 
 void atualizarPink(void) {
 	xPink = (padsCurrent(0) & KEY_LEFT) ? (xPink + -1) : xPink;
 	xPink = (padsCurrent(0) & KEY_RIGHT) ? (xPink + 1) : xPink;
-	xPink = (xPink < 0) ? 0 : xPink;
-	xPink = (xPink > 192) ? 192 : xPink;
+	xPink = (xPink < -2) ? -2 : xPink;
+	xPink = (xPink > 178) ? 178 : xPink;
 	animFrame = ((padsCurrent(0) & KEY_LEFT) || (padsCurrent(0) & KEY_RIGHT)) ? (animFrame + 1) : animFrame;
 	animFrame = (animFrame >= 4) ? 0 : animFrame;
-	oamSetEx(0, OBJ_SMALL, (padsCurrent(0) & KEY_LEFT) ? 0 : OBJ_SHOW);
-	oamSet(0, xPink, 192, 3, (padsCurrent(0) & KEY_LEFT) ? animLeft[animFrame] : animRight[animFrame], 0, animFrame, 2);
+	oamSetEx(0, OBJ_SMALL, (ehParaCarregarPink == 1) ? 0 : OBJ_SHOW);
+	oamSet(0, xPink, 178, 3, 0, 0, animLeft[animFrame], 2);
 	spcPlaySound(1);
 	return;
 }
@@ -815,7 +801,6 @@ void processor(void) {
 	carregarTijolo();
 	atualizarTijolo();
 	EhParaCarregarPink();
-	carregarPink();
 	atualizarPink();
 	mudarBackground();
 	return;
@@ -869,8 +854,10 @@ int main(void) {
 	setScreenOn();
 	WaitForVBlank();
 	oamInitGfxSet(&tilespink, (&tilespink_end - &tilespink), &palpink, (&palpink_end - &palpink), 2, 0x6000, OBJ_SIZE32_L64);
+	oamSet(0, 0, -16, 0, 0, 0, 0, 0);
 	oamSetEx(0, OBJ_SMALL, OBJ_HIDE);
 	oamInitGfxSet(&tilestijolos, (&tilestijolos_end - &tilestijolos), &paltijolos, (&paltijolos_end - &paltijolos), 3, 704, OBJ_SIZE8_L16);
+	oamSet(1, 0, 192, 0, 0, 0, 0, 0);
 	oamSetEx(1, OBJ_SMALL, OBJ_HIDE);
 	while (1) {
 		processor();

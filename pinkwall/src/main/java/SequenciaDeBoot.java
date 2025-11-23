@@ -29,7 +29,7 @@ public class SequenciaDeBoot {
 
         boot.postBootCommands = passosCarregarSRAM;
 
-        Boot.SnesBootCommand[] passosInicializacao = new Boot.SnesBootCommand[18];
+        Boot.SnesBootCommand[] passosInicializacao = new Boot.SnesBootCommand[20];
 
         passosInicializacao[0] = new Boot.SnesBootCommand(SnesOutput.dmaClearVram());
 
@@ -143,14 +143,17 @@ public class SequenciaDeBoot {
 
     public static void carregarPink(Boot.SnesBootCommand[] comandosBoot) {
 
-        SnesInstruction[] comandos = new SnesInstruction[2];
+        SnesInstruction[] comandos = new SnesInstruction[3];
 
         comandos[0] = SnesOutput.oamInitGfxSet(
                 "&tilespink", "(&tilespink_end - &tilespink)",
                 "&palpink", "(&palpink_end - &palpink)",
                 "2", "0x6000", SnesOutput.ObjSize.OBJ_SIZE32_L64
         );
-        comandos[1] = SnesOutput.oamSetEx(
+
+        comandos[1] = SnesOutput.oamSet(0, "0", "-16", "0", "0", "0", "0", "0");
+        
+        comandos[2] = SnesOutput.oamSetEx(
                 0, SnesOutput.ObjState.OBJ_SMALL, SnesOutput.ObjState.OBJ_HIDE
         );
 
@@ -162,7 +165,7 @@ public class SequenciaDeBoot {
 
     public static void carregarTijolos(Boot.SnesBootCommand[] comandosBoot) {
 
-        SnesInstruction[] comandos = new SnesInstruction[2];
+        SnesInstruction[] comandos = new SnesInstruction[3];
 
         int enderecoBase = 0x5800;
         int vramOffset = enderecoBase;
@@ -174,12 +177,14 @@ public class SequenciaDeBoot {
                 "3", indiceTile.toString(), SnesOutput.ObjSize.OBJ_SIZE8_L16
         );
 
-        comandos[1] = SnesOutput.oamSetEx(
+        comandos[1] = SnesOutput.oamSet(1, "0", "192", "0", "0", "0", "0", "0");
+
+        comandos[2] = SnesOutput.oamSetEx(
                 1, SnesOutput.ObjState.OBJ_SMALL, SnesOutput.ObjState.OBJ_HIDE
         );
 
-        for (int i = 16; i < comandos.length + 16; i++) {
-            comandosBoot[i] = new Boot.SnesBootCommand(comandos[i - 16]);
+        for (int i = 17; i < comandos.length + 17; i++) {
+            comandosBoot[i] = new Boot.SnesBootCommand(comandos[i - 17]);
         }
 
     }

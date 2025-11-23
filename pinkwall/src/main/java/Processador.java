@@ -11,7 +11,6 @@ import javasnes.output.SnesOutput;
 import javasnes.sneslib.SnesSound;
 import javasnes.sneslib.SnesUtilities;
 import javasnes.util.keywords.KeyWords;
-import javasnes.util.logic.SnesElseIf;
 import javasnes.util.logic.SnesIf;
 import javasnes.util.logic.SnesSwitch;
 import javasnes.util.operators.SnesOperator;
@@ -59,7 +58,6 @@ public class Processador {
             carregarTijolo(),
             atualizarTijolo(),
             ehParaCarregarPink(),
-            carregarPink(),
             atualizarPink(),
             mudarBackground()
         };
@@ -132,7 +130,7 @@ public class Processador {
         List<SnesInstruction> seBGehStartInstrucoes = new ArrayList<>();
 
         seBGehStartInstrucoes.add(SnesOutput.consoleDrawText(
-                2, 26, "HighScore: %d", ", (int) HiScore"
+                2, 26, "HighScore: %d", ", (long long int) HiScore"
         ));
 
         SnesIf seBGehStart = new SnesIf(
@@ -167,7 +165,7 @@ public class Processador {
         List<SnesInstruction> seBGehGameOverInstrucoes = new ArrayList<>();
 
         seBGehGameOverInstrucoes.add(SnesOutput.consoleDrawText(
-                2, 26, "Score: %d", ", (int) Score"
+                2, 26, "Score: %d", ", (long long int) Score"
         ));
 
         SnesIf seBGehGameOver = new SnesIf(
@@ -225,7 +223,7 @@ public class Processador {
                 ));
 
                 add(SnesOutput.consoleDrawText(
-                        26, 6, "%06d", ", (int) HiScore"
+                        26, 6, "%06d", ", (long long int) HiScore"
                 ));
 
                 add(SnesOutput.consoleDrawText(
@@ -233,7 +231,7 @@ public class Processador {
                 ));
 
                 add(SnesOutput.consoleDrawText(
-                        26, 12, "%06d", ", (int) Score"
+                        26, 12, "%06d", ", (long long int) Score"
                 ));
 
                 add(SnesOutput.consoleDrawText(
@@ -447,8 +445,8 @@ public class Processador {
         SnesInstruction[] instrucoes = new SnesInstruction[1];
 
         instrucoes[0] = new OperatorAssign(DadosGlobais.ehParaCarregarPink.name,
-                new OperatorTernary(new OperatorEquals(
-                        DadosGlobais.atualBG, new SnesU8("0")
+                new OperatorTernary(new OperatorSmallerOrEqual(
+                        DadosGlobais.atualBG, new SnesU8("2")
                 ), new SnesU8("1"), new SnesU8("0")).getSourceCode()
         );
 
@@ -456,61 +454,12 @@ public class Processador {
 
     }
 
-    public static SnesProcess carregarPink() {
-
-        SnesInstruction[] instrucoes = new SnesInstruction[1];
-
-        SnesElseIf seBGNaoPink = new SnesElseIf(
-                new OperatorOr(
-                        new OperatorEquals(DadosGlobais.atualBG, new SnesU8("3")).getSourceCode(),
-                        new OperatorEquals(DadosGlobais.atualBG, new SnesU8("4")).getSourceCode()
-                ), new ArrayList<>() {
-            {
-                add(SnesOutput.oamSet(
-                        0, "100", "192", "3", "0", "0", DadosGlobais.animFrame.name, "2"
-                ));
-                add(SnesOutput.oamSetEx(
-                        0, SnesOutput.ObjState.OBJ_SMALL, SnesOutput.ObjState.OBJ_HIDE
-                ));
-                add(SnesOutput.oamSetVisible(0, SnesOutput.ObjState.OBJ_HIDE));
-            }
-        }
-        );
-
-        SnesIf seBGehPink = new SnesIf(
-                new OperatorEquals(DadosGlobais.atualBG, new SnesU8("1")),
-                new ArrayList<>() {
-            {
-                add(SnesOutput.oamSet(
-                        0, "100", "192", "3", "0", "0", DadosGlobais.animFrame.name, "2"
-                ));
-                add(SnesOutput.oamSetEx(
-                        0, SnesOutput.ObjState.OBJ_SMALL, SnesOutput.ObjState.OBJ_SHOW
-                ));
-                add(SnesOutput.oamSetVisible(0, SnesOutput.ObjState.OBJ_SHOW));
-            }
-        },
-                new ArrayList<>() {
-            {
-                add(seBGNaoPink);
-            }
-        }
-        );
-
-        seBGehPink.generateSourceCode();
-
-        instrucoes[0] = seBGehPink;
-
-        return new SnesProcess("carregarPink", instrucoes, VOID);
-
-    }
-
     public static SnesProcess atualizarPink() {
 
         final SnesU8 MOVE_SPEED = new SnesU8("1");
-        final SnesU8 MIN_X = new SnesU8("0");
-        final SnesU8 MAX_X = new SnesU8("192");
-        final SnesU8 PINK_Y = new SnesU8("192");
+        final SnesS8 MIN_X = new SnesS8("-2");
+        final SnesU8 MAX_X = new SnesU8("178");
+        final SnesU8 PINK_Y = new SnesU8("178");
 
         List<SnesInstruction> instrucoes = new ArrayList<>();
 
@@ -583,7 +532,7 @@ public class Processador {
                 0,
                 SnesOutput.ObjState.OBJ_SMALL,
                 new OperatorTernary(
-                        SnesInput.keyLeftPressed(),
+                        new OperatorEquals("ehParaCarregarPink", "1"),
                         new SnesU8("0"),
                         new SnesU8(SnesOutput.ObjState.OBJ_SHOW)
                 ).getSourceCode()
@@ -594,13 +543,9 @@ public class Processador {
                 DadosGlobais.xPink.name,
                 PINK_Y.name,
                 "3",
-                new OperatorTernary(
-                        SnesInput.keyLeftPressed(),
-                        new SnesU8("animLeft[animFrame]"),
-                        new SnesU8("animRight[animFrame]")
-                ).getSourceCode(),
                 "0",
-                DadosGlobais.animFrame.name,
+                "0",
+                "animLeft[animFrame]",
                 "2"
         ));
 

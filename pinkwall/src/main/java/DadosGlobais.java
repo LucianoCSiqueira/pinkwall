@@ -81,7 +81,7 @@ public class DadosGlobais {
     public static SnesS16 yTijolo = new SnesS16("yTijolo", "-1");
     public static SnesS16 xTijolo = new SnesS16("xTijolo", "-1");
 
-    public static SnesU8 xPink = new SnesU8("xPink", "0");
+    public static SnesS16 xPink = new SnesS16("xPink", "0");
 
     public static SnesU8 qtdVidas = new SnesU8("qtdVidas", "3");
 
@@ -91,11 +91,7 @@ public class DadosGlobais {
     public static SnesU8 colidiuTijolo = new SnesU8("colidiuTijolo", "0");
 
     public static SnesCharArray animLeft = new SnesCharArray(
-        "animLeft", (short) 4, "{0, 2, 0, 4}"
-    );
-
-    public static SnesCharArray animRight = new SnesCharArray(
-        "animRight", (short) 4, "{6, 8, 6, 10}"
+        "animLeft", (short) 4, "{0, 4, 0, 8}"
     );
 
     public static SnesU8 animFrame = new SnesU8("animFrame", "0");
@@ -117,7 +113,6 @@ public class DadosGlobais {
             ehParaCarregarPink,
             ehParaCarregarTijolo,
             animLeft,
-            animRight,
             animFrame,
             noChao
         };

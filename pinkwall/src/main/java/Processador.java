@@ -25,6 +25,7 @@ import javasnes.util.operators.logical.OperatorOr;
 import javasnes.util.operators.logical.OperatorSmaller;
 import javasnes.util.operators.logical.OperatorSmallerOrEqual;
 import javasnes.util.operators.math.OperatorAdd;
+import javasnes.util.operators.math.OperatorMod;
 import javasnes.util.operators.ternary.OperatorTernary;
 import javasnes.util.types.Processor;
 import javasnes.util.types.SnesProcess;
@@ -33,6 +34,7 @@ import javasnes.util.types.vars.scalar.number.signed.SnesS16;
 import javasnes.util.types.vars.scalar.number.signed.SnesS32;
 import javasnes.util.types.vars.scalar.number.signed.SnesS8;
 import javasnes.util.types.vars.scalar.number.unsigned.SnesU16;
+import javasnes.util.types.vars.scalar.number.unsigned.SnesU32;
 import javasnes.util.types.vars.scalar.number.unsigned.SnesU8;
 
 public class Processador {
@@ -44,7 +46,7 @@ public class Processador {
 
     public static void configurarProcessador() {
 
-        processos = new SnesProcess[] {
+        processos = new SnesProcess[]{
             printHiScore(),
             limparPrintHiScore(),
             comecarJogo(),
@@ -188,11 +190,11 @@ public class Processador {
         SnesInstruction[] instrucoes = new SnesInstruction[1];
 
         SnesIf ifMudouHiScore = new SnesIf(
-                new OperatorGreaterOrEqual(DadosGlobais.Score, DadosGlobais.HiScore),
+                new OperatorGreater(DadosGlobais.Score, DadosGlobais.HiScore),
                 new ArrayList<>() {
             {
                 add(new OperatorAssign(DadosGlobais.HiScore.name, DadosGlobais.Score.name));
-                add(SnesUtilities.consoleCopySram("(u8*)&Score", "4"));
+                add(SnesUtilities.consoleCopySram("(u8*)&HiScore", "4"));
             }
         }
         );
@@ -211,25 +213,47 @@ public class Processador {
 
         SnesIf seBGehFase = new SnesIf(
                 new OperatorSmallerOrEqual(DadosGlobais.atualBG, new SnesU8("2")),
-                new ArrayList<>() {{
+                new ArrayList<>() {
+            {
 
-                    add(SnesOutput.consoleDrawText(
-                            20, 4, "Hi: %d", ", (int) HiScore"
-                    ));
+                add(SnesOutput.consoleDrawText(
+                        26, 3, "High", null
+                ));
 
-                    add(SnesOutput.consoleDrawText(
-                            20, 6, "Sc: %d", ", (int) Score"
-                    ));
+                add(SnesOutput.consoleDrawText(
+                        26, 4, "Score:", null
+                ));
 
-                    add(SnesOutput.consoleDrawText(
-                            20, 8, "Lv: %d", ", (int) (4 - qtdVidas)"
-                    ));
+                add(SnesOutput.consoleDrawText(
+                        26, 6, "%06d", ", (int) HiScore"
+                ));
 
-                    add(SnesOutput.consoleDrawText(
-                            20, 10, "Lf: %d", ", (int) qtdVidas"
-                    ));
+                add(SnesOutput.consoleDrawText(
+                        26, 10, "Score:", null
+                ));
 
-                }}
+                add(SnesOutput.consoleDrawText(
+                        26, 12, "%06d", ", (int) Score"
+                ));
+
+                add(SnesOutput.consoleDrawText(
+                        26, 16, "Level:", null
+                ));
+
+                add(SnesOutput.consoleDrawText(
+                        26, 18, "%d", ", (int) (4 - qtdVidas)"
+                ));
+
+                add(SnesOutput.consoleDrawText(
+                        26, 22, "Lifes:", null
+                ));
+
+                add(SnesOutput.consoleDrawText(
+                        26, 24, "%d", ", (int) qtdVidas"
+                ));
+
+            }
+        }
         );
 
         seBGehFase.generateSourceCode();
@@ -255,7 +279,7 @@ public class Processador {
                 new OperatorTernary(
                         caiu,
                         new SnesU8("1"),
-                        new SnesU8("0")
+                        DadosGlobais.mudarBG
                 ).getSourceCode()
         );
 
@@ -264,7 +288,7 @@ public class Processador {
                 new OperatorTernary(
                         caiu,
                         new SnesU8("1"),
-                        DadosGlobais.qtdVidas
+                        new SnesU8("0")
                 ).getSourceCode(),
                 '-'
         );
@@ -315,8 +339,14 @@ public class Processador {
                 DadosGlobais.Score.name,
                 new OperatorTernary(
                         colisao,
-                        new SnesU16("1000"),
-                        DadosGlobais.Score
+                        new SnesU16(new OperatorTernary(
+                                new OperatorSmallerOrEqual(
+                                        DadosGlobais.atualBG, new SnesU8("2")
+                                ),
+                                new SnesU16("100"),
+                                new SnesU16("0")
+                        ).getSourceCode()),
+                        new SnesU8("0")
                 ).getSourceCode(),
                 '+'
         );
@@ -336,92 +366,75 @@ public class Processador {
 
     public static SnesProcess carregarTijolo() {
 
-        SnesInstruction[] instrucoes = new SnesInstruction[3];
+        SnesInstruction[] instrucoes = new SnesInstruction[4];
 
-        instrucoes[0] = new OperatorAssign(
-                DadosGlobais.yTijolo.name,
-                "-16"
-        );
+        instrucoes[0] = new OperatorAssign(DadosGlobais.yTijolo.name, "-16");
 
-        instrucoes[1] = new OperatorAssign(
-                DadosGlobais.xTijolo.name,
-                "rand() & 200"
-        );
+        instrucoes[1] = new OperatorAssign(DadosGlobais.xTijolo.name, "rand() % 200");
 
-        instrucoes[2] = SnesOutput.oamSetEx(
+        instrucoes[2] = new OperatorAssign(DadosGlobais.colidiuTijolo.name, "0");
+
+        instrucoes[3] = SnesOutput.oamSetEx(
                 1,
                 SnesOutput.ObjState.OBJ_SMALL,
                 new OperatorTernary(
-                        new OperatorSmaller(DadosGlobais.atualBG, new SnesU8("3")),
+                        new OperatorSmallerOrEqual(DadosGlobais.atualBG, new SnesU8("2")),
                         SnesOutput.ObjState.OBJ_SHOW,
                         SnesOutput.ObjState.OBJ_HIDE
                 ).getSourceCode()
         );
 
         return new SnesProcess("carregarTijolo", instrucoes, VOID);
+
     }
 
     public static SnesProcess atualizarTijolo() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[4];
 
-        SnesU8 limiteY = new SnesU8("215");
+        SnesS16 limiteY = new SnesS16("215");
 
-        String caiu = new OperatorGreater(
-                new SnesS32("yTijolo"), limiteY
-        ).getSourceCode();
+        String caiu = new OperatorGreater(new SnesS32("yTijolo"), limiteY).getSourceCode();
 
         instrucoes[0] = new OperatorAssign(
                 DadosGlobais.yTijolo.name,
                 new OperatorTernary(
                         new OperatorEquals(
-                                new OperatorAnd("snes_vblank_count", "3").getSourceCode(),
+                                new OperatorMod(
+                                        new SnesU32("snes_vblank_count"), new SnesU8("3")
+                                ).getSourceCode(),
                                 "0"
                         ),
                         new SnesS16(
                                 new OperatorAdd(
-                                        DadosGlobais.yTijolo,
-                                        new SnesS8("1")
+                                        DadosGlobais.yTijolo, new SnesS8("1")
                                 ).getSourceCode()
                         ),
                         DadosGlobais.yTijolo
                 ).getSourceCode()
         );
 
-        SnesOperator precisaRespawn = new OperatorOr(
-                caiu,
-                DadosGlobais.colidiuTijolo.name
-        );
+        SnesOperator precisaRespawn = new OperatorOr(caiu, DadosGlobais.colidiuTijolo.name);
 
         instrucoes[1] = new OperatorAssign(
                 DadosGlobais.yTijolo.name,
                 new OperatorTernary(
-                        precisaRespawn,
-                        new SnesS8("-16"),
-                        DadosGlobais.yTijolo
+                        precisaRespawn, new SnesS8("-16"), DadosGlobais.yTijolo
                 ).getSourceCode()
         );
 
         instrucoes[2] = new OperatorAssign(
                 DadosGlobais.xTijolo.name,
                 new OperatorTernary(
-                        precisaRespawn,
-                        new SnesU8(
-                                "rand() & 200"
-                        ),
+                        precisaRespawn, new SnesU8("rand() % 200"),
                         DadosGlobais.xTijolo
                 ).getSourceCode()
         );
 
-        instrucoes[3] = SnesOutput.oamSetEx(
-                1,
-                SnesOutput.ObjState.OBJ_SMALL,
+        instrucoes[3] = new OperatorAssign(
+                DadosGlobais.colidiuTijolo.name,
                 new OperatorTernary(
-                        new OperatorSmaller(
-                                DadosGlobais.atualBG, new SnesU8("3")
-                        ),
-                        SnesOutput.ObjState.OBJ_SHOW,
-                        SnesOutput.ObjState.OBJ_HIDE
+                        precisaRespawn, "0", DadosGlobais.colidiuTijolo.name
                 ).getSourceCode()
         );
 
@@ -606,6 +619,10 @@ public class Processador {
         List<SnesInstruction> instrucoesSeEhParaMudarBG = new ArrayList<>();
 
         instrucoesSeEhParaMudarBG.add(new OperatorAssign(
+                DadosGlobais.mudarBG.name, "0"
+        ));
+
+        instrucoesSeEhParaMudarBG.add(new OperatorAssign(
                 DadosGlobais.atualBG.name, new OperatorTernary(
                         new OperatorGreaterOrEqual(DadosGlobais.atualBG, new SnesU8("4")),
                         new SnesU8("0"),
@@ -735,6 +752,9 @@ public class Processador {
         mapa3.add(KeyWords.snesBreak);
 
         mapa4.add(chamarLimparPrintHiScore);
+        mapa4.add(new OperatorAssign("Score", "0"));
+        mapa4.add(new OperatorAssign("qtdVidas", "3"));
+        mapa4.add(new OperatorAssign("yTijolo", "-16"));
         mapa4.add(SnesOutput.setScreenOff());
         mapa4.add(new OperatorAssign(DadosGlobais.ehParaCarregarPink.name, "0"));
         mapa4.add(new OperatorAssign(DadosGlobais.ehParaCarregarTijolo.name, "0"));

@@ -51,7 +51,7 @@ public class SequenciaDeBoot {
 
         SnesInstruction[] comandos = new SnesInstruction[8];
 
-        comandos[0] = SnesSound.spcAllocateSoundRegion(195);
+        comandos[0] = SnesSound.spcAllocateSoundRegion(60);
         comandos[1] = SnesSound.spcSetBank("&SOUNDBANK__");
         comandos[2] = SnesSound.spcLoad("MOD_POLLEN8");
         comandos[3] = SnesSound.spcPlay(0);
@@ -83,7 +83,7 @@ public class SequenciaDeBoot {
         comandos[1] = new OperatorAssign(
                 "HiScore",
                 new OperatorTernary(
-                        new OperatorEquals("HiScore % 1000", "0"),
+                        new OperatorEquals("HiScore % 100", "0"),
                         new SnesU32("HiScore"), new SnesU32("(100000")
                 ).getSourceCode()
         );
@@ -148,7 +148,7 @@ public class SequenciaDeBoot {
         comandos[0] = SnesOutput.oamInitGfxSet(
                 "&tilespink", "(&tilespink_end - &tilespink)",
                 "&palpink", "(&palpink_end - &palpink)",
-                "2", "(0x5000 >> 5)", SnesOutput.ObjSize.OBJ_SIZE32_L64
+                "2", "0x6000", SnesOutput.ObjSize.OBJ_SIZE32_L64
         );
         comandos[1] = SnesOutput.oamSetEx(
                 0, SnesOutput.ObjState.OBJ_SMALL, SnesOutput.ObjState.OBJ_HIDE

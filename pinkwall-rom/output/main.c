@@ -599,7 +599,6 @@ void carregarTijolo(void) {
 	yTijolo = -16;
 	xTijolo = rand() % 200;
 	colidiuTijolo = 0;
-	oamSetEx(1, OBJ_SMALL, (atualBG <= 2) ? OBJ_SHOW : OBJ_HIDE);
 	return;
 }
 
@@ -608,6 +607,8 @@ void atualizarTijolo(void) {
 	yTijolo = ((yTijolo > 215) || colidiuTijolo) ? -16 : yTijolo;
 	xTijolo = ((yTijolo > 215) || colidiuTijolo) ? rand() % 200 : xTijolo;
 	colidiuTijolo = ((yTijolo > 215) || colidiuTijolo) ? 0 : colidiuTijolo;
+	consoleDrawText((xTijolo / 8), (yTijolo / 8), " " );
+	consoleDrawText((xTijolo / 8), (yTijolo / 8), "#");
 	return;
 }
 
@@ -617,15 +618,17 @@ void EhParaCarregarPink(void) {
 }
 
 void atualizarPink(void) {
-	xPink = (padsCurrent(0) & KEY_LEFT) ? (xPink + -1) : xPink;
-	xPink = (padsCurrent(0) & KEY_RIGHT) ? (xPink + 1) : xPink;
-	xPink = (xPink < -2) ? -2 : xPink;
-	xPink = (xPink > 178) ? 178 : xPink;
-	animFrame = ((padsCurrent(0) & KEY_LEFT) || (padsCurrent(0) & KEY_RIGHT)) ? (animFrame + 1) : animFrame;
-	animFrame = (animFrame >= 4) ? 0 : animFrame;
-	oamSetEx(0, OBJ_SMALL, (ehParaCarregarPink == 1) ? 0 : OBJ_SHOW);
-	oamSet(0, xPink, 178, 3, 0, 0, animLeft[animFrame], 2);
-	spcPlaySound(1);
+	if ((ehParaCarregarPink == 1)) {
+			xPink = (padsCurrent(0) & KEY_LEFT) ? (xPink + -1) : xPink;
+			xPink = (padsCurrent(0) & KEY_RIGHT) ? (xPink + 1) : xPink;
+			xPink = (xPink < -2) ? -2 : xPink;
+			xPink = (xPink > 192) ? 192 : xPink;
+			animFrame = ((padsCurrent(0) & KEY_LEFT) || (padsCurrent(0) & KEY_RIGHT)) ? (animFrame + 1) : animFrame;
+			animFrame = (animFrame >= 4) ? 0 : animFrame;
+			oamSetEx(0, OBJ_SMALL, (ehParaCarregarPink == 1) ? OBJ_HIDE : OBJ_SHOW);
+			oamSet(0, xPink, 192, 3, 0, 0, animLeft[animFrame], 2);
+			spcPlaySound(1);
+	}
 	return;
 }
 
@@ -856,9 +859,6 @@ int main(void) {
 	oamInitGfxSet(&tilespink, (&tilespink_end - &tilespink), &palpink, (&palpink_end - &palpink), 2, 0x6000, OBJ_SIZE32_L64);
 	oamSet(0, 0, -16, 0, 0, 0, 0, 0);
 	oamSetEx(0, OBJ_SMALL, OBJ_HIDE);
-	oamInitGfxSet(&tilestijolos, (&tilestijolos_end - &tilestijolos), &paltijolos, (&paltijolos_end - &paltijolos), 3, 704, OBJ_SIZE8_L16);
-	oamSet(1, 0, 192, 0, 0, 0, 0, 0);
-	oamSetEx(1, OBJ_SMALL, OBJ_HIDE);
 	while (1) {
 		processor();
 		WaitForVBlank();

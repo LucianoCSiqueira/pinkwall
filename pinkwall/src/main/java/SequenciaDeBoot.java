@@ -29,14 +29,13 @@ public class SequenciaDeBoot {
 
         boot.postBootCommands = passosCarregarSRAM;
 
-        Boot.SnesBootCommand[] passosInicializacao = new Boot.SnesBootCommand[20];
+        Boot.SnesBootCommand[] passosInicializacao = new Boot.SnesBootCommand[17];
 
         passosInicializacao[0] = new Boot.SnesBootCommand(SnesOutput.dmaClearVram());
 
         carregarTexto(passosInicializacao);
         carregarMapa(passosInicializacao);
         carregarPink(passosInicializacao);
-        carregarTijolos(passosInicializacao);
 
         boot.postLogoCommands = passosInicializacao;
 
@@ -159,32 +158,6 @@ public class SequenciaDeBoot {
 
         for (int i = 14; i < comandos.length + 14; i++) {
             comandosBoot[i] = new Boot.SnesBootCommand(comandos[i - 14]);
-        }
-
-    }
-
-    public static void carregarTijolos(Boot.SnesBootCommand[] comandosBoot) {
-
-        SnesInstruction[] comandos = new SnesInstruction[3];
-
-        int enderecoBase = 0x5800;
-        int vramOffset = enderecoBase;
-        Integer indiceTile = vramOffset >> 5;
-
-        comandos[0] = SnesOutput.oamInitGfxSet(
-                "&tilestijolos", "(&tilestijolos_end - &tilestijolos)",
-                "&paltijolos", "(&paltijolos_end - &paltijolos)",
-                "3", indiceTile.toString(), SnesOutput.ObjSize.OBJ_SIZE8_L16
-        );
-
-        comandos[1] = SnesOutput.oamSet(1, "0", "192", "0", "0", "0", "0", "0");
-
-        comandos[2] = SnesOutput.oamSetEx(
-                1, SnesOutput.ObjState.OBJ_SMALL, SnesOutput.ObjState.OBJ_HIDE
-        );
-
-        for (int i = 17; i < comandos.length + 17; i++) {
-            comandosBoot[i] = new Boot.SnesBootCommand(comandos[i - 17]);
         }
 
     }

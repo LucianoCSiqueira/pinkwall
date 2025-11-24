@@ -24,17 +24,14 @@ import javasnes.util.operators.logical.OperatorOr;
 import javasnes.util.operators.logical.OperatorSmaller;
 import javasnes.util.operators.logical.OperatorSmallerOrEqual;
 import javasnes.util.operators.math.OperatorAdd;
-import javasnes.util.operators.math.OperatorDivision;
-import javasnes.util.operators.math.OperatorMod;
 import javasnes.util.operators.ternary.OperatorTernary;
 import javasnes.util.types.Processor;
 import javasnes.util.types.SnesProcess;
+import javasnes.util.types.vars.scalar.data.SnesChar;
 import javasnes.util.types.vars.scalar.data.SnesVoid;
-import javasnes.util.types.vars.scalar.number.signed.SnesS16;
 import javasnes.util.types.vars.scalar.number.signed.SnesS32;
 import javasnes.util.types.vars.scalar.number.signed.SnesS8;
 import javasnes.util.types.vars.scalar.number.unsigned.SnesU16;
-import javasnes.util.types.vars.scalar.number.unsigned.SnesU32;
 import javasnes.util.types.vars.scalar.number.unsigned.SnesU8;
 
 public class Processador {
@@ -47,15 +44,14 @@ public class Processador {
     public static void configurarProcessador() {
 
         processos = new SnesProcess[]{
+            limparTela(),
             printHiScore(),
-            limparPrintHiScore(),
             comecarJogo(),
             gameOver(),
             printScoreGameOver(),
             atualizarHiScore(),
             printDadosFase(),
             atualizarLevel(),
-            atualizarScore(),
             carregarTijolo(),
             atualizarTijolo(),
             ehParaCarregarPink(),
@@ -65,7 +61,7 @@ public class Processador {
 
         for (SnesProcess processo : processos) {
 
-            if (!processo.name.equals("limparPrintHiScore")) {
+            if (!processo.name.equals("limparTela")) {
                 processador.addProcess(processo, null);
             }
 
@@ -82,7 +78,9 @@ public class Processador {
         SnesIf seStart = new SnesIf(
                 new OperatorAnd(
                         SnesInput.keyStartPressed().getSourceCode(),
-                        new OperatorEquals(DadosGlobais.atualBG, new SnesU8("4")).getSourceCode()
+                        new OperatorEquals(
+                                DadosGlobais.atualBG, new SnesU8("4")
+                        ).getSourceCode()
                 ),
                 new ArrayList<>() {
             {
@@ -147,18 +145,6 @@ public class Processador {
 
     }
 
-    public static SnesProcess limparPrintHiScore() {
-
-        SnesInstruction[] instrucoes = new SnesInstruction[1];
-
-        instrucoes[0] = SnesOutput.consoleDrawText(
-                1, 26, "                          ", null
-        );
-
-        return new SnesProcess("limparPrintHiScore", instrucoes, VOID);
-
-    }
-
     public static SnesProcess printScoreGameOver() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[2];
@@ -192,7 +178,9 @@ public class Processador {
                 new OperatorGreater(DadosGlobais.Score, DadosGlobais.HiScore),
                 new ArrayList<>() {
             {
-                add(new OperatorAssign(DadosGlobais.HiScore.name, DadosGlobais.Score.name));
+                add(new OperatorAssign(
+                        DadosGlobais.HiScore.name, DadosGlobais.Score.name
+                ));
                 add(SnesUtilities.consoleCopySram("(u8*)&HiScore", "4"));
             }
         }
@@ -263,6 +251,18 @@ public class Processador {
 
     }
 
+    public static SnesProcess limparTela() {
+
+        SnesInstruction[] instrucoes = new SnesInstruction[1];
+        
+        instrucoes[0] = SnesOutput.consoleDrawText(
+                0, 0, " ".repeat(900), null
+        );
+
+        return new SnesProcess("limparTela", instrucoes, VOID);
+
+    }
+
     public static SnesProcess atualizarLevel() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[2];
@@ -296,143 +296,102 @@ public class Processador {
 
     }
 
-    public static SnesProcess atualizarScore() {
-
-        SnesInstruction[] instrucoes = new SnesInstruction[2];
-
-        SnesU8 xPink = new SnesU8("xPink");
-
-        SnesU8 pinkW = new SnesU8("32");
-        SnesU8 pinkH = new SnesU8("32");
-
-        SnesU8 brickW = new SnesU8("8");
-        SnesU8 brickH = new SnesU8("8");
-
-        SnesS32 xT = new SnesS32("xTijolo");
-        SnesS32 yT = new SnesS32("yTijolo");
-
-        String xOverlap = new OperatorAnd(
-                new OperatorSmaller(
-                        xT, new SnesU8(new OperatorAdd(xPink, pinkW).getSourceCode())
-                ).getSourceCode(),
-                new OperatorGreater(
-                        new SnesU8(new OperatorAdd(xT, brickW).getSourceCode()), xPink
-                ).getSourceCode()
-        ).getSourceCode();
-
-        String yOverlap = new OperatorAnd(
-                new OperatorSmaller(
-                        yT,
-                        new SnesU8(new OperatorAdd(new SnesU8("192"), pinkH).getSourceCode())
-                ).getSourceCode(),
-                new OperatorGreater(
-                        new SnesU8(new OperatorAdd(yT, brickH).getSourceCode()),
-                        new SnesU8("192")
-                ).getSourceCode()
-        ).getSourceCode();
-
-        SnesOperator colisao = new OperatorAnd(xOverlap, yOverlap);
-
-        instrucoes[0] = new OperatorAssign(
-                DadosGlobais.Score.name,
-                new OperatorTernary(
-                        colisao,
-                        new SnesU16(new OperatorTernary(
-                                new OperatorSmallerOrEqual(
-                                        DadosGlobais.atualBG, new SnesU8("2")
-                                ),
-                                new SnesU16("100"),
-                                new SnesU16("0")
-                        ).getSourceCode()),
-                        new SnesU8("0")
-                ).getSourceCode(),
-                '+'
-        );
-
-        instrucoes[1] = new OperatorAssign(
-                DadosGlobais.colidiuTijolo.name,
-                new OperatorTernary(colisao, new SnesU8("1"), new SnesU8("0")).getSourceCode()
-        );
-
-        return new SnesProcess("atualizarScore", instrucoes, VOID);
+    public static SnesProcess colisao() {
+        return null;
     }
 
     public static SnesProcess carregarTijolo() {
 
-        SnesInstruction[] instrucoes = new SnesInstruction[3];
+        SnesInstruction[] instrucoes = new SnesInstruction[1];
 
-        instrucoes[0] = new OperatorAssign(DadosGlobais.yTijolo.name, "-16");
+        SnesOperator ehParaCarregarTijolo = new OperatorAnd(
+                new OperatorEquals(
+                        DadosGlobais.ehParaCarregarTijolo, new SnesU8("1")
+                ).getSourceCode(),
+                new OperatorEquals(
+                        DadosGlobais.tijoloEstaNaTela, new SnesU8("0")
+                ).getSourceCode()
+        );
 
-        instrucoes[1] = new OperatorAssign(DadosGlobais.xTijolo.name, "rand() % 200");
+        List<SnesInstruction> instrucoesParaCarregarTijolo = new ArrayList<>();
 
-        instrucoes[2] = new OperatorAssign(DadosGlobais.colidiuTijolo.name, "0");
+        instrucoesParaCarregarTijolo.add(new SnesU16(
+                "posXNovoTijolo", "rand() % 23"
+        ));
+
+        instrucoesParaCarregarTijolo.add(new OperatorAssign(
+                DadosGlobais.yTijolo.name, "0"
+        ));
+
+        instrucoesParaCarregarTijolo.add(new OperatorAssign(
+                DadosGlobais.xTijolo.name, "posXNovoTijolo"
+        ));
+
+        instrucoesParaCarregarTijolo.add(new OperatorAssign(
+                DadosGlobais.tijoloEstaNaTela.name, "1"
+        ));
+
+        SnesIf seEhParaCarregarTijolo = new SnesIf(
+                ehParaCarregarTijolo, instrucoesParaCarregarTijolo
+        );
+
+        seEhParaCarregarTijolo.generateSourceCode();
+
+        instrucoes[0] = seEhParaCarregarTijolo;
 
         return new SnesProcess("carregarTijolo", instrucoes, VOID);
     }
 
     public static SnesProcess atualizarTijolo() {
 
-        SnesInstruction[] instrucoes = new SnesInstruction[6];
+        SnesInstruction[] instrucoes = new SnesInstruction[1];
 
-        SnesS16 limiteY = new SnesS16("215");
+        final Integer SPEED = 1;
 
-        instrucoes[0] = new OperatorAssign(
-                DadosGlobais.yTijolo.name,
+        SnesOperator estaNaTela = new OperatorEquals(
+                DadosGlobais.tijoloEstaNaTela.name, "1"
+        );
+
+        List<SnesInstruction> instrucoesSeEstaNaTela = new ArrayList<>();
+
+        instrucoesSeEstaNaTela.add(new SnesRawInstruction(
+                "consoleDrawText(" + 
+                DadosGlobais.xTijolo.name + ", " +
+                DadosGlobais.yTijoloAnterior.name + ", " + 
                 new OperatorTernary(
-                        new OperatorEquals(
-                                new OperatorMod(new SnesU32(
-                                        "snes_vblank_count"
-                                ), new SnesU8("3")).getSourceCode(),
-                                "0"
+                        new OperatorGreaterOrEqual(
+                                DadosGlobais.yTijoloAnterior, new SnesU8("0")
                         ),
-                        new SnesS16(new OperatorAdd(
-                                DadosGlobais.yTijolo, new SnesS8("1")
-                        ).getSourceCode()),
-                        DadosGlobais.yTijolo
-                ).getSourceCode()
+                        new SnesChar("\"\""), new SnesChar("\" \"")
+                ).getSourceCode() + ");"
+        ));
+
+        instrucoesSeEstaNaTela.add(new OperatorAssign(
+                DadosGlobais.yTijoloAnterior.name, DadosGlobais.yTijolo.name
+        ));
+
+        instrucoesSeEstaNaTela.add(new OperatorAssign(
+                DadosGlobais.yTijolo.name, SPEED.toString(),
+                '+'
+        ));
+
+        instrucoesSeEstaNaTela.add(new SnesRawInstruction(
+                "consoleDrawText(" + 
+                DadosGlobais.xTijolo.name + ", " +
+                DadosGlobais.yTijolo.name + ", " + 
+                "\"#\"" + ");"
+        ));
+
+        SnesIf seEhPraAtualizarTijoloNaTela = new SnesIf(
+                estaNaTela, instrucoesSeEstaNaTela
         );
 
-        SnesOperator precisaRespawn = new OperatorOr(
-                new OperatorGreater(new SnesS32("yTijolo"), limiteY).getSourceCode(),
-                DadosGlobais.colidiuTijolo.name
-        );
+        seEhPraAtualizarTijoloNaTela.generateSourceCode();
 
-        instrucoes[1] = new OperatorAssign(
-                DadosGlobais.yTijolo.name,
-                new OperatorTernary(
-                        precisaRespawn, new SnesS8("-16"), DadosGlobais.yTijolo
-                ).getSourceCode()
-        );
-
-        instrucoes[2] = new OperatorAssign(
-                DadosGlobais.xTijolo.name,
-                new OperatorTernary(
-                        precisaRespawn, new SnesU8("rand() % 200"), DadosGlobais.xTijolo
-                ).getSourceCode()
-        );
-
-        instrucoes[3] = new OperatorAssign(
-                DadosGlobais.colidiuTijolo.name,
-                new OperatorTernary(
-                        precisaRespawn, "0", DadosGlobais.colidiuTijolo.name
-                ).getSourceCode()
-        );
-
-        instrucoes[4] = new SnesRawInstruction("consoleDrawText(" +
-                new OperatorDivision(DadosGlobais.xTijolo, new SnesU8("8")).getSourceCode() 
-                + ", " +
-                new OperatorDivision(DadosGlobais.yTijolo, new SnesU8("8")).getSourceCode() + 
-                ", \" \" );"
-        );
-
-        instrucoes[5] = new SnesRawInstruction("consoleDrawText(" +
-                new OperatorDivision(DadosGlobais.xTijolo, new SnesU8("8")).getSourceCode() 
-                + ", " +
-                new OperatorDivision(DadosGlobais.yTijolo, new SnesU8("8")).getSourceCode()
-                + ", \"#\");"
-        );
-
+        instrucoes[0] = seEhPraAtualizarTijoloNaTela;
+        
         return new SnesProcess("atualizarTijolo", instrucoes, VOID);
+
     }
 
     public static SnesProcess ehParaCarregarPink() {
@@ -451,10 +410,10 @@ public class Processador {
 
     public static SnesProcess atualizarPink() {
 
-        final SnesU8 MOVE_SPEED = new SnesU8("1");
+        final SnesU8 MOVE_SPEED = new SnesU8("3");
         final SnesS8 MIN_X = new SnesS8("-2");
-        final SnesU8 MAX_X = new SnesU8("192");
-        final SnesU8 PINK_Y = new SnesU8("192");
+        final SnesU8 MAX_X = new SnesU8("178");
+        final SnesU8 PINK_Y = new SnesU8("178");
 
         SnesInstruction[] instrucoes = new SnesInstruction[1];
 
@@ -523,7 +482,9 @@ public class Processador {
         instrucoesSeEhParaCarregarPink.add(new OperatorAssign(
                 DadosGlobais.animFrame.name,
                 new OperatorTernary(
-                        new OperatorGreaterOrEqual(DadosGlobais.animFrame, new SnesU8("4")),
+                        new OperatorGreaterOrEqual(
+                                DadosGlobais.animFrame, new SnesU8("4")
+                        ),
                         new SnesU8("0"),
                         DadosGlobais.animFrame
                 ).getSourceCode()
@@ -579,7 +540,9 @@ public class Processador {
 
         instrucoesSeEhParaMudarBG.add(new OperatorAssign(
                 DadosGlobais.atualBG.name, new OperatorTernary(
-                        new OperatorGreaterOrEqual(DadosGlobais.atualBG, new SnesU8("4")),
+                        new OperatorGreaterOrEqual(
+                                DadosGlobais.atualBG, new SnesU8("4")
+                        ),
                         new SnesU8("0"),
                         new SnesU8(
                                 new OperatorAdd(
@@ -621,11 +584,11 @@ public class Processador {
         List<SnesInstruction> mapa3 = new ArrayList<>();
         List<SnesInstruction> mapa4 = new ArrayList<>();
 
-        SnesInstruction chamarLimparPrintHiScore = new SnesRawInstruction(
-                "limparPrintHiScore();"
+        SnesInstruction chamarLimparTela = new SnesRawInstruction(
+                "limparTela();"
         );
 
-        mapa0.add(chamarLimparPrintHiScore);
+        mapa0.add(chamarLimparTela);
         mapa0.add(SnesOutput.setScreenOff());
         mapa0.add(new OperatorAssign(DadosGlobais.ehParaCarregarTijolo.name, "1"));
         mapa0.add(SnesOutput.waitForVblank());
@@ -645,7 +608,7 @@ public class Processador {
         mapa0.add(SnesOutput.setScreenOn());
         mapa0.add(KeyWords.snesBreak);
 
-        mapa1.add(chamarLimparPrintHiScore);
+        mapa1.add(chamarLimparTela);
         mapa1.add(SnesOutput.setScreenOff());
         mapa1.add(new OperatorAssign(DadosGlobais.ehParaCarregarTijolo.name, "1"));
         mapa1.add(SnesOutput.waitForVblank());
@@ -665,7 +628,7 @@ public class Processador {
         mapa1.add(SnesOutput.setScreenOn());
         mapa1.add(KeyWords.snesBreak);
 
-        mapa2.add(chamarLimparPrintHiScore);
+        mapa2.add(chamarLimparTela);
         mapa2.add(SnesOutput.setScreenOff());
         mapa2.add(new OperatorAssign(DadosGlobais.ehParaCarregarTijolo.name, "1"));
         mapa2.add(SnesOutput.waitForVblank());
@@ -685,9 +648,8 @@ public class Processador {
         mapa2.add(SnesOutput.setScreenOn());
         mapa2.add(KeyWords.snesBreak);
 
-        mapa3.add(chamarLimparPrintHiScore);
+        mapa3.add(chamarLimparTela);
         mapa3.add(SnesOutput.setScreenOff());
-        mapa3.add(new OperatorAssign(DadosGlobais.ehParaCarregarPink.name, "0"));
         mapa3.add(new OperatorAssign(DadosGlobais.ehParaCarregarTijolo.name, "0"));
         mapa3.add(SnesOutput.waitForVblank());
         mapa3.add(SnesOutput.bgInitTileSet(
@@ -706,12 +668,10 @@ public class Processador {
         mapa3.add(SnesOutput.setScreenOn());
         mapa3.add(KeyWords.snesBreak);
 
-        mapa4.add(chamarLimparPrintHiScore);
+        mapa4.add(chamarLimparTela);
         mapa4.add(new OperatorAssign("Score", "0"));
         mapa4.add(new OperatorAssign("qtdVidas", "3"));
-        mapa4.add(new OperatorAssign("yTijolo", "-16"));
         mapa4.add(SnesOutput.setScreenOff());
-        mapa4.add(new OperatorAssign(DadosGlobais.ehParaCarregarPink.name, "0"));
         mapa4.add(new OperatorAssign(DadosGlobais.ehParaCarregarTijolo.name, "0"));
         mapa4.add(SnesOutput.waitForVblank());
         mapa4.add(SnesOutput.bgInitTileSet(

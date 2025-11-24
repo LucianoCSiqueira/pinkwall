@@ -35,13 +35,6 @@ public class Compilador {
             "$(GFXCONV) -s 32 -u 16 -o 16 -p -t bmp -i $<"
         );
 
-        Make.MakeRule tijolo = new Make.MakeRule(
-            "tijolo.pic",
-            "tijolo.bmp",
-            "$(GFXCONV) -s 8 -o 16 -u 16 -p -t bmp -i $<\n"
-        );
-
-
         Make.MakeRule bg1 = new Make.MakeRule(
             "BG_1.pic",
             "BG_1.bmp",
@@ -74,13 +67,12 @@ public class Compilador {
 
         Make.MakeRule bitmaps = new Make.MakeRule(
             "bitmaps",
-            "fonte.pic BG_1.pic BG_2.pic BG_3.pic BG_4.pic BG_5.pic sprites.pic tijolo.pic",
+            "fonte.pic BG_1.pic BG_2.pic BG_3.pic BG_4.pic BG_5.pic sprites.pic",
             ""
         );
 
         makefile.addRule(textFont);
         makefile.addRule(sprites);
-        makefile.addRule(tijolo);
 
         makefile.addRule(bg1);
         makefile.addRule(bg2);
@@ -91,31 +83,8 @@ public class Compilador {
         makefile.addRule(bitmaps);
         makefile.addPhonyTarget("bitmaps");
 
-        Make.MakeRule move = new Make.MakeRule(
-            "move.brr",
-            "move.wav",
-            "$(BRCONV) -e $< $@"
-        );
-
-        Make.MakeRule lose = new Make.MakeRule(
-            "lose.brr",
-            "lose.wav",
-            "$(BRCONV) -e $< $@"
-        );
-
-        Make.MakeRule musics = new Make.MakeRule(
-            "musics",
-            "move.brr lose.brr"
-        );
-
-        makefile.addRule(move);
-        makefile.addRule(lose);
-
-        makefile.addRule(musics);
-        makefile.addPhonyTarget("musics");
-
         makefile.getRule("all").setPrerequisites(
-            makefile.getRule("all").getPrerequisites() + " musics bitmaps $(ROMNAME).sfc"
+            makefile.getRule("all").getPrerequisites() + " bitmaps $(ROMNAME).sfc"
         );
 
         makefile.setRomName("PinkWall");
@@ -138,11 +107,9 @@ public class Compilador {
 
         Path fonte = pastaJAR.resolve("data").resolve("fonte.bmp");
         Path sprites = pastaJAR.resolve("data").resolve("sprites.bmp");
-        Path tijolo = pastaJAR.resolve("data").resolve("tijolo.bmp");
 
         app.addDataToCopy(fonte.toString());
         app.addDataToCopy(sprites.toString());
-        app.addDataToCopy(tijolo.toString());
 
         Path bg1 = pastaJAR.resolve("data").resolve("BG_1.bmp");
         Path bg2 = pastaJAR.resolve("data").resolve("BG_2.bmp");
@@ -156,12 +123,8 @@ public class Compilador {
         app.addDataToCopy(bg4.toString());
         app.addDataToCopy(bg5.toString());
 
-        Path loseWave = pastaJAR.resolve("data").resolve("lose.wav");
-        Path moveWave = pastaJAR.resolve("data").resolve("move.wav");
         Path pollen8 = pastaJAR.resolve("data").resolve("pollen8.it");
 
-        app.addDataToCopy(loseWave.toString());
-        app.addDataToCopy(moveWave.toString());
         app.addDataToCopy(pollen8.toString());
 
         Path pastaROM = pastaJAR.resolve("output");

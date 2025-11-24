@@ -6,33 +6,34 @@ extern char javasnes_map, javasnes_map_end;
 extern char javasnes_palette, javasnes_palette_end;
 // end auto-generated global instructions
 
-extern char bgmap0, bgmap2, bgpalette4_end, paltijolos, bgmap1, bgtiles3_end, bgmap4, bgmap3, bgmap0_end, tilesfont, tilestijolos, bgtiles4_end, palfont, movebrrsound, bgtiles1, bgtiles0, bgtiles3, paltijolos_end, bgtiles2, bgpalette3_end, bgmap4_end, palpink_end, bgtiles4, losebrrsound_end, tilespink, tilestijolos_end, losebrrsound, bgtiles1_end, bgpalette2_end, bgmap3_end, bgpalette4, bgpalette3, bgpalette2, bgtiles0_end, bgpalette1, bgpalette0, movebrrsound_end, SOUNDBANK__, tilespink_end, bgtiles2_end, bgpalette0_end, bgmap1_end, palpink, bgpalette1_end, bgmap2_end;
+extern char bgmap0, bgmap2, bgpalette4_end, bgmap1, bgtiles3_end, bgmap4, bgmap3, bgmap0_end, tilesfont, bgtiles4_end, palfont, bgtiles1, bgtiles0, bgtiles3, bgtiles2, bgpalette3_end, bgmap4_end, palpink_end, bgtiles4, tilespink, bgtiles1_end, bgpalette2_end, bgmap3_end, bgpalette4, bgpalette3, bgpalette2, bgtiles0_end, bgpalette1, bgpalette0, SOUNDBANK__, tilespink_end, bgtiles2_end, bgpalette0_end, bgmap1_end, palpink, bgpalette1_end, bgmap2_end;
 u8 mudarBG = 0;
 u16 pad0 = 0;
 u8 atualBG = 4;
 u32 HiScore = 10000;
 u32 Score = 0;
+s16 yTijoloAnterior = -1;
 s16 yTijolo = -1;
 s16 xTijolo = -1;
 s16 xPink = 0;
 u8 qtdVidas = 3;
-u8 colidiuTijolo = 0;
 u8 ehParaCarregarPink = 0;
 u8 ehParaCarregarTijolo = 0;
+u8 tijoloEstaNaTela = 0;
 char animLeft[4] = {0, 4, 0, 8};
 u8 animFrame = 0;
 u8 noChao = 0;
 #include "soundbank.h"
 
+void limparTela(void) {
+	consoleDrawText(0, 0, "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ");
+	return;
+}
+
 void printHiScore(void) {
 	if ((atualBG == 4)) {
 			consoleDrawText(2, 26, "HighScore: %d", (long long int) HiScore);
 	}
-	return;
-}
-
-void limparPrintHiScore(void) {
-	consoleDrawText(1, 26, "                          ");
 	return;
 }
 
@@ -589,26 +590,23 @@ void atualizarLevel(void) {
 	return;
 }
 
-void atualizarScore(void) {
-	Score += (((xTijolo < (xPink + 32)) && ((xTijolo + 8) > xPink)) && ((yTijolo < (192 + 32)) && ((yTijolo + 8) > 192))) ? (atualBG <= 2) ? 100 : 0 : 0;
-	colidiuTijolo = (((xTijolo < (xPink + 32)) && ((xTijolo + 8) > xPink)) && ((yTijolo < (192 + 32)) && ((yTijolo + 8) > 192))) ? 1 : 0;
-	return;
-}
-
 void carregarTijolo(void) {
-	yTijolo = -16;
-	xTijolo = rand() % 200;
-	colidiuTijolo = 0;
+	if (((ehParaCarregarTijolo == 1) && (tijoloEstaNaTela == 0))) {
+			u16 posXNovoTijolo = rand() % 23;
+			yTijolo = 0;
+			xTijolo = posXNovoTijolo;
+			tijoloEstaNaTela = 1;
+	}
 	return;
 }
 
 void atualizarTijolo(void) {
-	yTijolo = ((snes_vblank_count % 3) == 0) ? (yTijolo + 1) : yTijolo;
-	yTijolo = ((yTijolo > 215) || colidiuTijolo) ? -16 : yTijolo;
-	xTijolo = ((yTijolo > 215) || colidiuTijolo) ? rand() % 200 : xTijolo;
-	colidiuTijolo = ((yTijolo > 215) || colidiuTijolo) ? 0 : colidiuTijolo;
-	consoleDrawText((xTijolo / 8), (yTijolo / 8), " " );
-	consoleDrawText((xTijolo / 8), (yTijolo / 8), "#");
+	if ((tijoloEstaNaTela == 1)) {
+			consoleDrawText(xTijolo, yTijoloAnterior, (yTijoloAnterior >= 0) ? "" : " ");
+			yTijoloAnterior = yTijolo;
+			yTijolo += 1;
+			consoleDrawText(xTijolo, yTijolo, "#");
+	}
 	return;
 }
 
@@ -620,13 +618,13 @@ void EhParaCarregarPink(void) {
 void atualizarPink(void) {
 	if ((ehParaCarregarPink == 1)) {
 			xPink = (padsCurrent(0) & KEY_LEFT) ? (xPink + -1) : xPink;
-			xPink = (padsCurrent(0) & KEY_RIGHT) ? (xPink + 1) : xPink;
+			xPink = (padsCurrent(0) & KEY_RIGHT) ? (xPink + 3) : xPink;
 			xPink = (xPink < -2) ? -2 : xPink;
-			xPink = (xPink > 192) ? 192 : xPink;
+			xPink = (xPink > 178) ? 178 : xPink;
 			animFrame = ((padsCurrent(0) & KEY_LEFT) || (padsCurrent(0) & KEY_RIGHT)) ? (animFrame + 1) : animFrame;
 			animFrame = (animFrame >= 4) ? 0 : animFrame;
 			oamSetEx(0, OBJ_SMALL, (ehParaCarregarPink == 1) ? OBJ_HIDE : OBJ_SHOW);
-			oamSet(0, xPink, 192, 3, 0, 0, animLeft[animFrame], 2);
+			oamSet(0, xPink, 178, 3, 0, 0, animLeft[animFrame], 2);
 			spcPlaySound(1);
 	}
 	return;
@@ -638,7 +636,7 @@ void mudarBackground(void) {
 			atualBG = (atualBG >= 4) ? 0 : (atualBG + 1);
 			switch (atualBG) {
 				case 0:
-					limparPrintHiScore();
+					limparTela();
 					setScreenOff();
 					ehParaCarregarTijolo = 1;
 					WaitForVBlank();
@@ -667,7 +665,7 @@ void mudarBackground(void) {
 					setScreenOn();
 					break;
 				case 1:
-					limparPrintHiScore();
+					limparTela();
 					setScreenOff();
 					ehParaCarregarTijolo = 1;
 					WaitForVBlank();
@@ -696,7 +694,7 @@ void mudarBackground(void) {
 					setScreenOn();
 					break;
 				case 2:
-					limparPrintHiScore();
+					limparTela();
 					setScreenOff();
 					ehParaCarregarTijolo = 1;
 					WaitForVBlank();
@@ -725,9 +723,8 @@ void mudarBackground(void) {
 					setScreenOn();
 					break;
 				case 3:
-					limparPrintHiScore();
+					limparTela();
 					setScreenOff();
-					ehParaCarregarPink = 0;
 					ehParaCarregarTijolo = 0;
 					WaitForVBlank();
 					bgInitTileSet(1, &bgtiles3, &bgpalette3, 0, (&bgtiles3_end - &bgtiles3), (&bgpalette3_end - &bgpalette3), BG_16COLORS, 0x4000);
@@ -755,12 +752,10 @@ void mudarBackground(void) {
 					setScreenOn();
 					break;
 				case 4:
-					limparPrintHiScore();
+					limparTela();
 					Score = 0;
 					qtdVidas = 3;
-					yTijolo = -16;
 					setScreenOff();
-					ehParaCarregarPink = 0;
 					ehParaCarregarTijolo = 0;
 					WaitForVBlank();
 					bgInitTileSet(1, &bgtiles4, &bgpalette4, 0, (&bgtiles4_end - &bgtiles4), (&bgpalette4_end - &bgpalette4), BG_16COLORS, 0x4000);
@@ -800,7 +795,6 @@ void processor(void) {
 	atualizarHiScore();
 	printDadosFase();
 	atualizarLevel();
-	atualizarScore();
 	carregarTijolo();
 	atualizarTijolo();
 	EhParaCarregarPink();
@@ -817,10 +811,7 @@ int main(void) {
 	spcSetBank(&SOUNDBANK__);
 	spcLoad(MOD_POLLEN8);
 	spcPlay(0);
-	brrsamples losesound;WaitForVBlank();
-	brrsamples movesound;WaitForVBlank();
-	spcSetSoundEntry(15, 15, 2, (&losebrrsound_end - &losebrrsound), &losebrrsound, &losesound);
-	spcSetSoundEntry(15, 15, 5, (&movebrrsound_end - &movebrrsound), &movebrrsound, &movesound);
+	spcSetModuleVolume(50);
 	
 	bgInitTileSet(0, &javasnes_patterns, &javasnes_palette, 0, (&javasnes_patterns_end - &javasnes_patterns), (&javasnes_palette_end - &javasnes_palette), BG_16COLORS, 0x4000);
 	bgInitMapSet(0, &javasnes_map, (&javasnes_map_end - &javasnes_map), SC_32x32, 0x0000);
@@ -832,7 +823,7 @@ int main(void) {
 	setScreenOn();
 	
 	consoleLoadSram((u8* )&HiScore, 4);
-	HiScore = (HiScore % 100 == 0) ? HiScore : (10000);
+	HiScore = ((HiScore % 100 == 0) && !((HiScore < 10000))) ? HiScore : (10000);
 	
 	WaitForVBlank();
 	

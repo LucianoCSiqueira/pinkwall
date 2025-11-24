@@ -10,7 +10,6 @@ public class CarregarDados {
 
         colocarDadosAppData(appData, dadosFonte(), (byte) 2);
         colocarDadosAppData(appData, dadosPink(), (byte) 2);
-        colocarDadosAppData(appData, dadosTijolo(), (byte) 2);
 
         colocarDadosAppData(appData, dadosBackground1(), (byte) 3);
         colocarDadosAppData(appData, dadosBackground2(), (byte) 4);
@@ -18,23 +17,7 @@ public class CarregarDados {
         colocarDadosAppData(appData, dadosBackground4(), (byte) 6);
         colocarDadosAppData(appData, dadosBackground5(), (byte) 7);
         
-        colocarDadosAppData(appData, dadosSom(), (byte) 8);
-        
         return appData;
-
-    }
-
-    public static Data[] dadosSom() {
-
-        Data[] dados = new Data[2];
-
-        Data soundLose = new Data("losebrrsound", "lose.brr", true);
-        Data soundMove = new Data("movebrrsound", "move.brr", true);
-
-        dados[0] = soundLose;
-        dados[1] = soundMove;
-
-        return dados;
 
     }
 
@@ -141,20 +124,6 @@ public class CarregarDados {
 
         dados[0] = tilespink;
         dados[1] = palpink;
-
-        return dados;
-
-    }
-
-    public static Data[] dadosTijolo() {
-
-        Data[] dados = new Data[2];
-
-        Data tilestijolo = new Data("tilestijolos", "tijolo.pic", true);
-        Data paltijolo = new Data("paltijolos", "tijolo.pal", true);
-
-        dados[0] = tilestijolo;
-        dados[1] = paltijolo;
 
         return dados;
 

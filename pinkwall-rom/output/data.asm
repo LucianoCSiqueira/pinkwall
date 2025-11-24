@@ -35,14 +35,6 @@ palpink:
 .incbin "sprites.pal"
 palpink_end:
 
-tilestijolos:
-.incbin "tijolo.pic"
-tilestijolos_end:
-
-paltijolos:
-.incbin "tijolo.pal"
-paltijolos_end:
-
 
 .ends
 
@@ -122,18 +114,6 @@ bgpalette4_end:
 bgmap4:
 .incbin "BG_5.map"
 bgmap4_end:
-
-
-.ends
-
-.section ".rodata8" superfree
-losebrrsound:
-.incbin "lose.brr"
-losebrrsound_end:
-
-movebrrsound:
-.incbin "move.brr"
-movebrrsound_end:
 
 
 .ends

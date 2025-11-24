@@ -38,8 +38,6 @@ public class DadosGlobais {
 
             "tilesfont", "palfont", "tilespink", "palpink",
             "tilespink_end", "palpink_end",
-            "tilestijolos", "paltijolos",
-            "tilestijolos_end", "paltijolos_end",
 
             "bgtiles0", "bgtiles0_end",
             "bgpalette0", "bgpalette0_end",
@@ -61,8 +59,6 @@ public class DadosGlobais {
             "bgpalette4", "bgpalette4_end",
             "bgmap4", "bgmap4_end",
 
-            "losebrrsound", "losebrrsound_end",
-            "movebrrsound", "movebrrsound_end",
             "SOUNDBANK__"
 
         };
@@ -78,8 +74,14 @@ public class DadosGlobais {
 
     public static SnesU16 pad0 = new SnesU16("pad0", "0");
 
+    public static SnesS16 yTijoloAnterior = new SnesS16("yTijoloAnterior", "-1");
+
     public static SnesS16 yTijolo = new SnesS16("yTijolo", "-1");
     public static SnesS16 xTijolo = new SnesS16("xTijolo", "-1");
+
+    public static SnesU8 tijoloEstaNaTela = new SnesU8("tijoloEstaNaTela", "0");
+
+    public static SnesU8 ehParaReiniciarTijolo = new SnesU8("ehParaReiniciarTijolo", "0");
 
     public static SnesS16 xPink = new SnesS16("xPink", "0");
 
@@ -87,8 +89,6 @@ public class DadosGlobais {
 
     public static SnesU8 ehParaCarregarPink = new SnesU8("ehParaCarregarPink", "0");
     public static SnesU8 ehParaCarregarTijolo = new SnesU8("ehParaCarregarTijolo", "0");
-
-    public static SnesU8 colidiuTijolo = new SnesU8("colidiuTijolo", "0");
 
     public static SnesCharArray animLeft = new SnesCharArray(
         "animLeft", (short) 4, "{0, 4, 0, 8}"
@@ -105,13 +105,14 @@ public class DadosGlobais {
             atualBG,
             HiScore,
             Score,
+            yTijoloAnterior,
             yTijolo,
             xTijolo,
             xPink,
             qtdVidas,
-            colidiuTijolo,
             ehParaCarregarPink,
             ehParaCarregarTijolo,
+            tijoloEstaNaTela,
             animLeft,
             animFrame,
             noChao

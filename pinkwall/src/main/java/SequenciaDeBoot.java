@@ -6,10 +6,12 @@ import javasnes.output.SnesOutput;
 import javasnes.sneslib.SnesSound;
 import javasnes.sneslib.SnesUtilities;
 import javasnes.util.operators.assign.OperatorAssign;
+import javasnes.util.operators.logical.OperatorAnd;
 import javasnes.util.operators.logical.OperatorEquals;
+import javasnes.util.operators.logical.OperatorNot;
+import javasnes.util.operators.logical.OperatorSmaller;
 import javasnes.util.operators.ternary.OperatorTernary;
 import javasnes.util.types.vars.scalar.number.unsigned.SnesU32;
-import javasnes.util.types.vars.scalar.sound.SnesBrrSample;
 
 public class SequenciaDeBoot {
 
@@ -17,7 +19,7 @@ public class SequenciaDeBoot {
 
         Boot boot = new Boot();
 
-        Boot.SnesBootCommand[] passosCarregarSPC = new Boot.SnesBootCommand[8];
+        Boot.SnesBootCommand[] passosCarregarSPC = new Boot.SnesBootCommand[5];
 
         carregarMusica(passosCarregarSPC);
 
@@ -48,24 +50,13 @@ public class SequenciaDeBoot {
 
     public static void carregarMusica(Boot.SnesBootCommand[] comandosBoot) {
 
-        SnesInstruction[] comandos = new SnesInstruction[8];
+        SnesInstruction[] comandos = new SnesInstruction[5];
 
         comandos[0] = SnesSound.spcAllocateSoundRegion(60);
         comandos[1] = SnesSound.spcSetBank("&SOUNDBANK__");
         comandos[2] = SnesSound.spcLoad("MOD_POLLEN8");
         comandos[3] = SnesSound.spcPlay(0);
-        comandos[4] = new SnesRawInstruction(
-            new SnesBrrSample("losesound").sourceCode + "WaitForVBlank();"
-        );
-        comandos[5] = new SnesRawInstruction(
-            new SnesBrrSample("movesound").sourceCode + "WaitForVBlank();"
-        );
-        comandos[6] = SnesSound.spcSetSoundEntry(
-                15, 15, 2, "(&losebrrsound_end - &losebrrsound)", "&losebrrsound", "&losesound"
-        );
-        comandos[7] = SnesSound.spcSetSoundEntry(
-                15, 15, 5, "(&movebrrsound_end - &movebrrsound)", "&movebrrsound", "&movesound"
-        );
+        comandos[4] = new SnesRawInstruction("spcSetModuleVolume(50);");
 
         for (int i = 0; i < comandos.length; i++) {
             comandosBoot[i] = new Boot.SnesBootCommand(comandos[i]);
@@ -82,7 +73,12 @@ public class SequenciaDeBoot {
         comandos[1] = new OperatorAssign(
                 "HiScore",
                 new OperatorTernary(
-                        new OperatorEquals("HiScore % 100", "0"),
+                        new OperatorAnd(
+                            new OperatorEquals("HiScore % 100", "0").getSourceCode(),
+                            new OperatorNot(
+                                new OperatorSmaller("HiScore", "10000").getSourceCode()
+                            ).getSourceCode()
+                        ),
                         new SnesU32("HiScore"), new SnesU32("(100000")
                 ).getSourceCode()
         );

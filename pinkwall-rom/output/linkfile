@@ -1,9 +1,0 @@
-[objects]
-main.obj
-soundbank.obj
-data.obj
-hdr.obj
-/home/aluno/Downloads/pvsneslib_440_64b_linux/pvsneslib/pvsneslib/lib/LoROM_SlowROM/crt0_snes.obj
-/home/aluno/Downloads/pvsneslib_440_64b_linux/pvsneslib/pvsneslib/lib/LoROM_SlowROM/libc.obj
-/home/aluno/Downloads/pvsneslib_440_64b_linux/pvsneslib/pvsneslib/lib/LoROM_SlowROM/libm.obj
-/home/aluno/Downloads/pvsneslib_440_64b_linux/pvsneslib/pvsneslib/lib/LoROM_SlowROM/libtcc.obj

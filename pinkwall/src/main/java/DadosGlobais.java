@@ -81,8 +81,6 @@ public class DadosGlobais {
 
     public static SnesU8 tijoloEstaNaTela = new SnesU8("tijoloEstaNaTela", "0");
 
-    public static SnesU8 ehParaReiniciarTijolo = new SnesU8("ehParaReiniciarTijolo", "0");
-
     public static SnesS16 xPink = new SnesS16("xPink", "0");
 
     public static SnesU8 qtdVidas = new SnesU8("qtdVidas", "3");
@@ -95,7 +93,6 @@ public class DadosGlobais {
     );
 
     public static SnesU8 animFrame = new SnesU8("animFrame", "0");
-    public static SnesU8 noChao = new SnesU8("noChao", "0");
 
     public static SnesInstruction[] variaveisGlobais() {
 
@@ -114,8 +111,7 @@ public class DadosGlobais {
             ehParaCarregarTijolo,
             tijoloEstaNaTela,
             animLeft,
-            animFrame,
-            noChao
+            animFrame
         };
     }
 

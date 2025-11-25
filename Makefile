@@ -1,6 +1,6 @@
 GRADLEW := ./gradlew
-OUTPUT_DIR := pinkwall-rom
-EMULATOR := ../../lakesnes
+OUTPUT_DIR := build-rom
+EMULATOR := snes9x.AppImage
 
 all: run
 

@@ -47,43 +47,38 @@ public class Processador {
     public static SnesProcess[] processos;
 
     /**
-     * Primeiro limpe qualquer tela se necessário(chamado por mudarBackground no final
-     * do processo anterior, por isso não é rodado a cada frame(processador)).
-     * Depois imprime as informações do jogo necessárias pro BG especifico.
-     * 
-     * Depois roda o metodo de iniciar o jogo que le o controle para que quando pressione start
-     * inicie o jogo.
-     * 
-     * Depois roda um metodo que verifica se precisa carregar o pinkwall, e outro metodo que
-     * carrega se necessário o tijolo.
-     * 
-     * Após isso roda os metodos que atualizam os dados do jogo, e verifica se houve colisão, 
-     * e por fim roda um metodo que atualiza o background se necessário.
-     * 
+     * Primeiro limpe qualquer tela se necessário(chamado por mudarBackground
+     * no final do processo anterior, por isso não é rodado a cada
+     * frame(processador)). Depois imprime as informações do jogo necessárias
+     * pro BG especifico.
+     *
+     * Depois roda o metodo de iniciar o jogo que le o controle para que quando
+     * pressione start inicie o jogo.
+     *
+     * Depois roda um metodo que verifica se precisa carregar o pinkwall, e
+     * outro metodo que carrega se necessário o tijolo.
+     *
+     * Após isso roda os metodos que atualizam os dados do jogo, e verifica se
+     * houve colisão, e por fim roda um metodo que atualiza o background se
+     * necessário.
+     *
      */
     public static void configurarProcessador() {
 
-        processos = new SnesProcess[] {
-
-                limparTela(),
-
-                printHiScore(),
-                printDadosFase(),
-                printScoreGameOver(),
-
-                iniciarJogoComStart(),
-
-                ehParaCarregarPink(),
-                carregarTijolo(),
-                
-                atualizarHiScore(),
-                atualizarLevel(),
-                atualizarTijolo(),
-                atualizarPink(),
-
-                colisaoTijoloPink(),
-
-                mudarBackground()
+        processos = new SnesProcess[]{
+            limparTela(),
+            printHiScore(),
+            printDadosFase(),
+            printScoreGameOver(),
+            iniciarJogoComStart(),
+            ehParaCarregarPink(),
+            carregarTijolo(),
+            atualizarHiScore(),
+            atualizarLevel(),
+            atualizarTijolo(),
+            atualizarPink(),
+            colisaoTijoloPink(),
+            mudarBackground()
 
         };
 
@@ -97,6 +92,12 @@ public class Processador {
 
     }
 
+    /**
+     * Inicia o jogo se o background atual for igual a 3 e se a tecla start for
+     * pressionada.
+     *
+     * @return SnesProcess que representa a inicializa o do jogo.
+     */
     public static SnesProcess iniciarJogoComStart() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[2];
@@ -125,6 +126,13 @@ public class Processador {
 
     }
 
+    /**
+     * Imprime na tela o valor atual da variavel HiScore se o background atual
+     * for igual a 4.
+     *
+     * @return SnesProcess que representa a impress o do valor atual da variavel
+     * HiScore.
+     */
     public static SnesProcess printHiScore() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[1];
@@ -148,6 +156,13 @@ public class Processador {
 
     }
 
+    /**
+     * Imprime na tela o valor atual da variavel Score se o background atual for
+     * igual a 3.
+     *
+     * @return SnesProcess que representa a impress o do valor atual da variavel
+     * Score.
+     */
     public static SnesProcess printScoreGameOver() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[2];
@@ -173,6 +188,13 @@ public class Processador {
 
     }
 
+    /**
+     * Atualiza o valor da variavel HiScore se o valor da variavel Score for
+     * maior.
+     *
+     * @return SnesProcess que representa a atualiza o do valor da variavel
+     * HiScore.
+     */
     public static SnesProcess atualizarHiScore() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[1];
@@ -197,6 +219,13 @@ public class Processador {
 
     }
 
+    /**
+     * Imprime na tela o valor atual da variavel HiScore se o background atual
+     * for igual a 2.
+     *
+     * @return SnesProcess que representa a impress o do valor atual da variavel
+     * HiScore.
+     */
     public static SnesProcess printDadosFase() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[1];
@@ -254,23 +283,36 @@ public class Processador {
 
     }
 
+    /**
+     * Imprime na tela a string de espaços em branco, formando uma linha
+     * horizontal em branco. Isso é útil para limpar a tela.
+     *
+     * @return SnesProcess que representa a impress o de uma linha horizontal em
+     * branco.
+     */
     public static SnesProcess limparTela() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[30];
-        
+
         for (int i = 0; i < 30; i++) {
-            
+
             instrucoes[i] = SnesOutput.consoleDrawText(
-                0, i, " ".repeat(34), null
-            );    
+                    0, i, " ".repeat(34), null
+            );
 
         }
-        
 
         return new SnesProcess("limparTela", instrucoes, VOID);
 
     }
 
+    /**
+     * Atualiza o nivel atual do jogo, mudando o background (mudarBG) e
+     * decrementando a quantidade de vidas (qtdVidas) caso o personagem tenha
+     * ultrapassado o limite superior da tela (yTijolo > 27).
+     *
+     * @return SnesProcess que representa a atualiza o do nivel do jogo.
+     */
     public static SnesProcess atualizarLevel() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[2];
@@ -304,10 +346,18 @@ public class Processador {
 
     }
 
+    /**
+     * Verifica se o personagem colidiu com o pinkwall. Caso sim, decrementa a
+     * quantidade de vidas (qtdVidas) e muda o background (mudarBG) para o
+     * pinkwall.
+     *
+     * @return SnesProcess que representa a colis o entre o personagem e o
+     * pinkwall.
+     */
     public static SnesProcess colisaoTijoloPink() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[1];
-        
+
         SnesOperator tijoloNaTela = new OperatorEquals(
                 DadosGlobais.tijoloEstaNaTela, new SnesU8("1")
         );
@@ -392,6 +442,22 @@ public class Processador {
 
     }
 
+    /**
+     * Carrega as informacoes necessarias para o SPC processar a cria o de um
+     * novo tijolo na tela.
+     *
+     * A primeira instru o define que o tijolo s criado se a variavel
+     * ehParaCarregarTijolo for igual a 1 e a variavel tijoloEstaNaTela for
+     * igual a 0. A segunda define que, se a condicao for verdadeira, a variavel
+     * ehParaCarregarTijolo ser atualizada com o valor 0, a variavel
+     * yTijoloAnterior ser atualizada com o valor -1, a variavel posXNovoTijolo
+     * ser atualizada com o valor (rand() % 22) + 1, a variavel yTijolo ser
+     * atualizada com o valor 0, a variavel xTijolo ser atualizada com o valor
+     * posXNovoTijolo e a variavel tijoloEstaNaTela ser atualizada com o valor
+     * 1.
+     *
+     * @return Um SnesProcess que representa o carregamento do tijolo na tela.
+     */
     public static SnesProcess carregarTijolo() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[1];
@@ -442,6 +508,16 @@ public class Processador {
         return new SnesProcess("carregarTijolo", instrucoes, VOID);
     }
 
+    /**
+     * Atualiza a posicao do tijolo na tela.
+     *
+     * Primeiramente, verifica se o tijolo esta na tela. Caso esteja, atualiza a
+     * posicao do tijolo na tela. Em seguida, atualiza a posicao do tijolo na
+     * memoria de SRAM.
+     *
+     * @return SnesProcess que representa a atualizacao da posicao do tijolo na
+     * tela.
+     */
     public static SnesProcess atualizarTijolo() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[2];
@@ -449,10 +525,10 @@ public class Processador {
         final Integer VELOCIDADE = 1;
 
         instrucoes[0] = new SnesRawInstruction(
-                "consoleDrawText(" + 
-                DadosGlobais.xTijolo.name + ", " +
-                DadosGlobais.yTijoloAnterior.name + ", " + 
-                "\" \"" + ");"
+                "consoleDrawText("
+                + DadosGlobais.xTijolo.name + ", "
+                + DadosGlobais.yTijoloAnterior.name + ", "
+                + "\" \"" + ");"
         );
 
         SnesOperator estaNaTelaEPrecisaAtualizar = new OperatorAnd(
@@ -471,10 +547,10 @@ public class Processador {
         List<SnesInstruction> instrucoesSeEstaNaTela = new ArrayList<>();
 
         instrucoesSeEstaNaTela.add(new SnesRawInstruction(
-                "consoleDrawText(" + 
-                DadosGlobais.xTijolo.name + ", " +
-                DadosGlobais.yTijoloAnterior.name + ", " + 
-                "\" \"" + ");"
+                "consoleDrawText("
+                + DadosGlobais.xTijolo.name + ", "
+                + DadosGlobais.yTijoloAnterior.name + ", "
+                + "\" \"" + ");"
         ));
 
         instrucoesSeEstaNaTela.add(new OperatorAssign(
@@ -493,10 +569,10 @@ public class Processador {
         ));
 
         instrucoesSeEstaNaTela.add(new SnesRawInstruction(
-                "consoleDrawText(" + 
-                DadosGlobais.xTijolo.name + ", " +
-                DadosGlobais.yTijolo.name + ", " + 
-                "\"#\"" + ");"
+                "consoleDrawText("
+                + DadosGlobais.xTijolo.name + ", "
+                + DadosGlobais.yTijolo.name + ", "
+                + "\"#\"" + ");"
         ));
 
         SnesIf seEhPraAtualizarTijoloNaTela = new SnesIf(
@@ -506,11 +582,19 @@ public class Processador {
         seEhPraAtualizarTijoloNaTela.generateSourceCode();
 
         instrucoes[1] = seEhPraAtualizarTijoloNaTela;
-        
+
         return new SnesProcess("atualizarTijolo", instrucoes, VOID);
 
     }
 
+    /**
+     * EhParaCarregarPink (EhParaCarregarPink)
+     *
+     * This SnesProcess sets ehParaCarregarPink to 1 if the current background
+     * is 2, otherwise, it sets ehParaCarregarPink to 0.
+     *
+     * @return A SnesProcess object containing the instructions.
+     */
     public static SnesProcess ehParaCarregarPink() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[1];
@@ -525,6 +609,16 @@ public class Processador {
 
     }
 
+    /**
+     * atualizarPink (AtualizarPink)
+     *
+     * This SnesProcess updates pink's position and animation frame. It checks
+     * if ehParaCarregarPink is 1, if it is, it updates pink's position and
+     * animation frame, otherwise, it resets pink's animation frame and
+     * visibility.
+     *
+     * @return A SnesProcess object containing the instructions.
+     */
     public static SnesProcess atualizarPink() {
 
         final SnesU8 VELOCIDADE = new SnesU8("7");
@@ -681,6 +775,15 @@ public class Processador {
         );
     }
 
+    /**
+     * Verifica se precisa mudar o background e o muda caso necess ario.
+     *
+     * Primeiramente, verifica se precisa mudar o background (mudarBG) e muda o
+     * atual background (atualBG) para o valor correto. Em seguida, carrega o
+     * mapa correto para o background.
+     *
+     * @return SnesProcess que representa a mudan a do background.
+     */
     public static SnesProcess mudarBackground() {
 
         SnesInstruction[] instrucoes = new SnesInstruction[1];
@@ -727,6 +830,13 @@ public class Processador {
 
     }
 
+    /**
+     * Carrega as informa es necessarias para o SPC processar a mapa do
+     * PinkWall. O mapa carregado depende do valor de atualBG.
+     *
+     * @return Um Map com as chaves sendo 0, 1, 2, 3 e 4, e os valores sendo
+     * listas de SnesInstructions que devem ser executadas para carregar o mapa.
+     */
     public static Map<String, List<SnesInstruction>> carregarMapas() {
 
         Map<String, List<SnesInstruction>> mapas = new HashMap<>();

@@ -15,6 +15,16 @@ import javasnes.util.types.vars.scalar.number.unsigned.SnesU32;
 
 public class SequenciaDeBoot {
 
+    /**
+     * Define a sequencia de boot do jogo.
+     *
+     * A sequencia de boot e responsavel por carregar a memoria do jogo, definir
+     * os passos que serao executados na inicializacao do jogo, carregar a
+     * musica de fundo, carregar o texto que sera exibido na tela, carregar o
+     * mapa do jogo e carregar o personagem principal do jogo.
+     *
+     * @return O objeto Boot que representa a sequencia de boot do jogo.
+     */
     public static Boot sequenciaDeBoot() {
 
         Boot boot = new Boot();
@@ -41,13 +51,24 @@ public class SequenciaDeBoot {
 
         boot.postLogoCommands = passosInicializacao;
 
-
         // Atualiza o codigo fonte da sequencia de boot
         boot.getSourceCode();
 
         return boot;
     }
 
+    /**
+     * Carrega as instrucoes necessarias para tocar a musica durante a sequencia
+     * de boot do jogo.
+     *
+     * As instrucoes sao as seguintes:
+     *
+     * Reserva 60 blocos de 256 bytes de memoria de VRAM para a musica Define o
+     * banco de sons como sendo o arquivo SOUNDBANK__ Carrega a musica
+     * MOD_POLLEN8 Toca a musica Define o volume da musica como sendo 50
+     *
+     * @param comandosBoot Os comandos a serem executados pelo SPC.
+     */
     public static void carregarMusica(Boot.SnesBootCommand[] comandosBoot) {
 
         SnesInstruction[] comandos = new SnesInstruction[5];
@@ -64,6 +85,16 @@ public class SequenciaDeBoot {
 
     }
 
+    /**
+     * Carrega as informacoes necessarias para o SPC processar a memoria de SRAM
+     * do jogo.
+     *
+     * A primeira instrucao carrega a variavel HiScore na memoria de SRAM a
+     * partir da posicao 0x1000. A segunda define que HiScore sera atualizado
+     * somente se a variavel for menor ou igual a 10000.
+     *
+     * @param comandosBoot Os comandos a serem executados pelo SPC.
+     */
     public static void carregarSRAM(Boot.SnesBootCommand[] comandosBoot) {
 
         SnesInstruction[] comandos = new SnesInstruction[2];
@@ -74,10 +105,10 @@ public class SequenciaDeBoot {
                 "HiScore",
                 new OperatorTernary(
                         new OperatorAnd(
-                            new OperatorEquals("HiScore % 100", "0").getSourceCode(),
-                            new OperatorNot(
-                                new OperatorSmaller("HiScore", "10000").getSourceCode()
-                            ).getSourceCode()
+                                new OperatorEquals("HiScore % 100", "0").getSourceCode(),
+                                new OperatorNot(
+                                        new OperatorSmaller("HiScore", "10000").getSourceCode()
+                                ).getSourceCode()
                         ),
                         new SnesU32("HiScore"), new SnesU32("(100000")
                 ).getSourceCode()
@@ -89,6 +120,17 @@ public class SequenciaDeBoot {
 
     }
 
+    /**
+     * Carrega as informa es necessarias para o SPC processar o texto do jogo.
+     *
+     * A primeira instrucao define a posicao da memoria de VRAM onde sera
+     * carregado o tileset do texto. A segunda define a posicao da memoria de
+     * VRAM onde sera carregado o mapa do texto. A terceira define a posicao da
+     * memoria de VRAM onde sera carregado o offset do texto. A quarta instrucao
+     * inicializa o texto com as caracteristicas definidas.
+     *
+     * @param comandosBoot Os comandos a serem executados pelo SPC.
+     */
     public static void carregarTexto(Boot.SnesBootCommand[] comandosBoot) {
 
         SnesInstruction[] comandos = new SnesInstruction[4];
@@ -104,6 +146,18 @@ public class SequenciaDeBoot {
 
     }
 
+    /**
+     * Carrega as informa es necessarias para o SPC processar a mapa do
+     * PinkWall.
+     *
+     * A primeira instrucao desliga a tela, a segunda define as caracteristicas
+     * do tileset e a terceira define as caracteristicas da mapa. A quarta
+     * define a posicao inicial da mapa no OAM, a quinta define a posicao
+     * inicial da mapa no OAM, a sexta define a cor de fundo da mapa e a setima
+     * define a visibilidade da mapa.
+     *
+     * @param comandosBoot Os comandos a serem executados pelo SPC.
+     */
     public static void carregarMapa(Boot.SnesBootCommand[] comandosBoot) {
 
         SnesInstruction[] comandos = new SnesInstruction[9];
@@ -136,6 +190,15 @@ public class SequenciaDeBoot {
 
     }
 
+    /**
+     * Carrega as informa es necessarias para o SPC processar as imagens de
+     * Pink.
+     *
+     * A primeira instrucao carrega as imagens no OAM, a segunda define a
+     * posicao inicial de Pink e a terceira define a visibilidade de Pink.
+     *
+     * @param comandosBoot Os comandos a serem executados pelo SPC.
+     */
     public static void carregarPink(Boot.SnesBootCommand[] comandosBoot) {
 
         SnesInstruction[] comandos = new SnesInstruction[3];
@@ -147,7 +210,7 @@ public class SequenciaDeBoot {
         );
 
         comandos[1] = SnesOutput.oamSet(0, "0", "-16", "0", "0", "0", "0", "0");
-        
+
         comandos[2] = SnesOutput.oamSetEx(
                 0, SnesOutput.ObjState.OBJ_SMALL, SnesOutput.ObjState.OBJ_HIDE
         );

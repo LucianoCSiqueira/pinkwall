@@ -15,7 +15,13 @@ public class DadosGlobais {
 
     public static SnesInstruction[] definicoesGlobais;
 
-    @SuppressWarnings("ManualArrayToCollectionCopy")
+    /**
+     * Define as variaveis globais do jogo.
+     *
+     * Primeiramente, carrega as variaveis globais do jogo. Em seguida, define
+     * as variaveis globais do jogo. Por fim, inclui o arquivo de definicoes das
+     * variaveis globais do jogo.
+     */
     public static void definirDados() {
 
         SnesInstruction[] vars = variaveisGlobais();
@@ -29,36 +35,36 @@ public class DadosGlobais {
         }
 
         definicoesGlobais[vars.length + 1] = include();
-        
+
     }
 
+    /**
+     * Carrega externos que ser o utilizados no codigo C. Os externos são
+     * carregados utilizando o SnesLoadExtern, que carrega os valores das
+     * variaveis globais no programa.
+     *
+     * @return SnesInstruction que representa o carregamento dos externos.
+     */
     public static SnesInstruction carregarExternos() {
 
         String[] carregarExterno = new String[]{
-
             "tilesfont", "palfont", "tilespink", "palpink",
             "tilespink_end", "palpink_end",
-
             "bgtiles0", "bgtiles0_end",
             "bgpalette0", "bgpalette0_end",
             "bgmap0", "bgmap0_end",
-
             "bgtiles1", "bgtiles1_end",
             "bgpalette1", "bgpalette1_end",
             "bgmap1", "bgmap1_end",
-
             "bgtiles2", "bgtiles2_end",
             "bgpalette2", "bgpalette2_end",
             "bgmap2", "bgmap2_end",
-
             "bgtiles3", "bgtiles3_end",
             "bgpalette3", "bgpalette3_end",
             "bgmap3", "bgmap3_end",
-
             "bgtiles4", "bgtiles4_end",
             "bgpalette4", "bgpalette4_end",
             "bgmap4", "bgmap4_end",
-
             "SOUNDBANK__"
 
         };
@@ -89,11 +95,19 @@ public class DadosGlobais {
     public static SnesU8 ehParaCarregarTijolo = new SnesU8("ehParaCarregarTijolo", "0");
 
     public static SnesCharArray animLeft = new SnesCharArray(
-        "animLeft", (short) 4, "{0, 4, 0, 8}"
+            "animLeft", (short) 4, "{0, 4, 0, 8}"
     );
 
     public static SnesU8 animFrame = new SnesU8("animFrame", "0");
 
+    /**
+     * Retorna um array de instrucoes Snes que representam as variaveis globais
+     * do jogo. Essas variaveis serao incluidas no arquivo de definicoes do
+     * jogo.
+     *
+     * @return Um array de instrucoes Snes que representam as variaveis globais
+     * do jogo.
+     */
     public static SnesInstruction[] variaveisGlobais() {
 
         return new SnesInstruction[]{
@@ -115,6 +129,11 @@ public class DadosGlobais {
         };
     }
 
+    /**
+     * Inclui o arquivo soundbank.h
+     *
+     * @return Instrucao de inclusao
+     */
     public static SnesInstruction include() {
 
         return new SnesInclude("\"soundbank.h\"");

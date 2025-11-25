@@ -3,6 +3,15 @@ import javasnes.App;
 
 public class PinkWall {
 
+    /**
+     * Metodo principal do programa.
+     *
+     * Constroi o app pinkwall, passa os dados do app, faz a inicialização e a
+     * sequencia de inicialização, define os dados, configura o processador e os
+     * processos e tenta compilar o ROM.
+     *
+     * @param args Argumentos da linha de comando
+     */
     public static void main(String[] args) {
 
         // Constroi o app pinkwall
@@ -37,6 +46,5 @@ public class PinkWall {
         }
 
     }
-    
-}
 
+}

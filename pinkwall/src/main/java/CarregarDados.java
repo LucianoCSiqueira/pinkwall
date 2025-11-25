@@ -6,11 +6,16 @@ public class CarregarDados {
 
     public static AppData carregarDados() {
 
+        // dados do app
         AppData appData = new AppData();
 
+        // Passa a fonte pro app
         colocarDadosAppData(appData, dadosFonte(), (byte) 2);
+
+        // Passa o sprite pro app
         colocarDadosAppData(appData, dadosPink(), (byte) 2);
 
+        // Passa os background pro app
         colocarDadosAppData(appData, dadosBackground1(), (byte) 3);
         colocarDadosAppData(appData, dadosBackground2(), (byte) 4);
         colocarDadosAppData(appData, dadosBackground3(), (byte) 5);
@@ -22,6 +27,8 @@ public class CarregarDados {
     }
 
     public static Data[] dadosFonte() {
+
+        // configura os dados da fonte
 
         Data[] dados = new Data[2];
 
@@ -36,6 +43,8 @@ public class CarregarDados {
     }
 
     public static Data[] dadosBackground1() {
+
+        // configura os dados do background 1
 
         Data[] dados = new Data[3];
 
@@ -53,6 +62,8 @@ public class CarregarDados {
 
     public static Data[] dadosBackground2() {
 
+        // configura os dados do background 2
+
         Data[] dados = new Data[3];
 
         Data bgtiles = new Data("bgtiles1", "BG_2.pic", true);
@@ -68,6 +79,8 @@ public class CarregarDados {
     }
 
     public static Data[] dadosBackground3() {
+
+        // Configura os dados do background 3
 
         Data[] dados = new Data[3];
 
@@ -85,6 +98,8 @@ public class CarregarDados {
 
     public static Data[] dadosBackground4() {
 
+        // configura os dados do background 4
+
         Data[] dados = new Data[3];
 
         Data bgtiles = new Data("bgtiles3", "BG_4.pic", true);
@@ -100,6 +115,8 @@ public class CarregarDados {
     }
 
     public static Data[] dadosBackground5() {
+
+        // configura os dados do background 4
 
         Data[] dados = new Data[3];
 
@@ -117,6 +134,8 @@ public class CarregarDados {
 
     public static Data[] dadosPink() {
 
+        // Configura os dados do sprite
+
         Data[] dados = new Data[2];
 
         Data tilespink = new Data("tilespink", "sprites.pic", true);
@@ -130,6 +149,8 @@ public class CarregarDados {
     }
 
     public static void colocarDadosAppData(AppData appData, Data[] dados, byte bank) {
+
+        // coloca os Dados no app data
 
         for (Data dado : dados) {
             appData.registerData(dado, bank);

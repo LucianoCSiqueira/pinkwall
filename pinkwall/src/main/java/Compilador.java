@@ -10,9 +10,13 @@ public class Compilador {
 
     public static MemoryMapping configurarMapaMemoria() {
 
+        // define o mapa da memoria
         HashMap<String, String> memMapConfig = new HashMap<>();
+
+        // Define o nome do jogo (tem que ter 21 caracteres)
         memMapConfig.put("name", "Pink Wall - The Game ");
         
+        // configura o mapa da memoria
         MemoryMapping memMap = new MemoryMapping(memMapConfig);
         
         return memMap;
@@ -22,6 +26,8 @@ public class Compilador {
     public static Make passosCompilacao() {
 
         Make makefile = new Make();
+
+        //compila os dados
 
         Make.MakeRule textFont = new Make.MakeRule(
             "fonte.pic",
@@ -71,6 +77,7 @@ public class Compilador {
             ""
         );
 
+        // adiciona as regras do make file
         makefile.addRule(textFont);
         makefile.addRule(sprites);
 
@@ -87,7 +94,9 @@ public class Compilador {
             makefile.getRule("all").getPrerequisites() + " bitmaps $(ROMNAME).sfc"
         );
 
+        // Define o nome da Rom no makefile
         makefile.setRomName("PinkWall");
+
         makefile.addHeaderLine("AUDIOFILES := pollen8.it");
         makefile.addHeaderLine("export SOUNDBANK := soundbank");
         makefile.addVariable("SMCONVFLAGS", "-s -o $(SOUNDBANK) -V -b 5");
@@ -98,9 +107,13 @@ public class Compilador {
 
     public static void compilarROM(App.Builder app) throws Exception {
 
+        // configura o mapa da memoria
         app.setMemoryMapping(configurarMapaMemoria());
+
+        // define os passos do make file
         app.setMakefile(passosCompilacao());
 
+        
         Path pastaJAR = Paths.get(
             PinkWall.class.getProtectionDomain().getCodeSource().getLocation().toURI()
         ).normalize().toAbsolutePath().getParent();
